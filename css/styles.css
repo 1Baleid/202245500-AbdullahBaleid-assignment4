@@ -505,11 +505,16 @@ textarea {
 
 /* Theme Toggle */
 .theme-toggle {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--bg-glass);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-full);
-    padding: var(--space-sm);
+    padding: 0;
     cursor: none;
     transition: all var(--transition-fast);
     position: relative;
@@ -3805,7 +3810,6 @@ textarea {
         height: 44px;
         min-width: 44px;
         min-height: 44px;
-        padding: var(--space-sm);
     }
 
     .mobile-social-bar {
