@@ -459,10 +459,12 @@ textarea {
 
 /* Mobile Navigation Toggle */
 .nav__toggle {
+    width: 48px;
+    height: 48px;
     display: none;
     flex-direction: column;
     gap: 6px;
-    padding: var(--space-md);
+    padding: 0;
     z-index: var(--z-modal);
     background: var(--bg-glass);
     border: 1px solid var(--border-color);
@@ -484,6 +486,8 @@ textarea {
 .nav__toggle-bar {
     width: 24px;
     height: 3px;
+    display: block;
+    flex: 0 0 3px;
     background: var(--text-primary);
     border-radius: var(--radius-full);
     transition: all var(--transition-base);
@@ -3229,6 +3233,222 @@ textarea {
 
 .repo-card__link:hover {
     gap: var(--space-sm);
+}
+
+/* ------------------------------------------------
+   Assignment 4: Fun Zone Section (OMDb & RAWG APIs)
+   ------------------------------------------------ */
+.funzone {
+    padding: var(--space-5xl) 0;
+    background: var(--bg-primary);
+}
+
+.funzone__category {
+    margin-bottom: var(--space-3xl);
+}
+
+.funzone__category:last-child {
+    margin-bottom: 0;
+}
+
+.funzone__subtitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-xl);
+}
+
+.funzone__subtitle svg {
+    color: var(--accent);
+}
+
+.funzone__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-xl);
+}
+
+.funzone__loading {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-3xl);
+    color: var(--text-secondary);
+}
+
+.funzone__error {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-3xl);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.funzone__error svg {
+    color: var(--accent);
+}
+
+/* Movie Card */
+.movie-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.movie-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
+}
+
+.movie-card__poster {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    background: var(--bg-tertiary);
+}
+
+.movie-card__info {
+    padding: var(--space-lg);
+}
+
+.movie-card__title {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movie-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.movie-card__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: #f5c518;
+    font-weight: var(--fw-medium);
+}
+
+.imdb-logo {
+    height: 16px;
+    width: auto;
+}
+
+.movie-card__genre {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Game Card */
+.game-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.game-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
+}
+
+.game-card__image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: var(--bg-tertiary);
+}
+
+.game-card__info {
+    padding: var(--space-lg);
+}
+
+.game-card__title {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.game-card__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: #4ecdc4;
+    font-weight: var(--fw-medium);
+}
+
+.game-card__platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.game-card__platform {
+    font-size: var(--fs-xs);
+    padding: 2px 8px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+}
+
+.game-card__genres {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+/* Fun Zone Responsive */
+@media (max-width: 768px) {
+    .funzone__grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .movie-card__poster {
+        height: 280px;
+    }
+
+    .game-card__image {
+        height: 150px;
+    }
 }
 
 /* ------------------------------------------------

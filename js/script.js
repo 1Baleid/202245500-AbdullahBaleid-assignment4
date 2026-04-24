@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticleTrail();        // Assignment 4: Particle Trail Cursor
     initConfetti();             // Assignment 4: Confetti Effect
     initKonamiCode();           // Assignment 4: Easter Egg
+    initFunZone();              // Assignment 4: OMDb & RAWG APIs
 });
 
 /* ------------------------------------------------
@@ -2839,5 +2840,217 @@ function initKonamiCode() {
                 onComplete: () => notification.remove()
             });
         }, 5000);
+    }
+}
+
+/* ------------------------------------------------
+   Assignment 4: Fun Zone (OMDb & RAWG APIs)
+   ------------------------------------------------ */
+function initFunZone() {
+    // API Keys - Replace with your own keys
+    const OMDB_API_KEY = '4a3b711b'; // Free key for demo - get yours at omdbapi.com
+    const RAWG_API_KEY = '37d1b2b371404566a830293fd5a4d889'; // Your RAWG API key
+
+    // My favorite movies/shows to display
+    const favoriteMovies = [
+        'Game of Thrones',
+        'The Sopranos',
+        'Interstellar',
+        'The Invisible Guest'
+    ];
+
+    // My favorite games to search
+    const favoriteGames = [
+        'The Witcher 3',
+        'Red Dead Redemption 2',
+        'God of War',
+        'Elden Ring',
+        'Cyberpunk 2077',
+        'Ghost of Tsushima'
+    ];
+
+    // Initialize both APIs
+    fetchMovies();
+    fetchGames();
+
+    // Fetch movies from OMDb API
+    async function fetchMovies() {
+        const moviesGrid = document.getElementById('moviesGrid');
+        const moviesLoading = document.getElementById('moviesLoading');
+
+        if (!moviesGrid) return;
+
+        try {
+            const moviePromises = favoriteMovies.map(title =>
+                fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`)
+                    .then(res => res.json())
+            );
+
+            const movies = await Promise.all(moviePromises);
+            const validMovies = movies.filter(movie => movie.Response === 'True');
+
+            // Remove loading
+            if (moviesLoading) moviesLoading.remove();
+
+            if (validMovies.length === 0) {
+                moviesGrid.innerHTML = `
+                    <div class="funzone__error">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4M12 16h.01"/>
+                        </svg>
+                        <p>Unable to load movies. Please try again later.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render movie cards
+            validMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <img
+                        src="${movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'}"
+                        alt="${movie.Title}"
+                        class="movie-card__poster"
+                        loading="lazy"
+                    >
+                    <div class="movie-card__info">
+                        <h4 class="movie-card__title">${movie.Title}</h4>
+                        <div class="movie-card__meta">
+                            <span>${movie.Year}</span>
+                            <span class="movie-card__rating">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="imdb-logo">
+                                ${movie.imdbRating}
+                            </span>
+                        </div>
+                        <p class="movie-card__genre">${movie.Genre}</p>
+                    </div>
+                `;
+
+                // Add hover animation
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { scale: 1.02, duration: 0.3 });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { scale: 1, duration: 0.3 });
+                });
+
+                moviesGrid.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+            if (moviesLoading) moviesLoading.remove();
+            moviesGrid.innerHTML = `
+                <div class="funzone__error">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4M12 16h.01"/>
+                    </svg>
+                    <p>Unable to load movies. Please try again later.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Fetch games from RAWG API (User's Wishlist)
+    async function fetchGames() {
+        const gamesGrid = document.getElementById('gamesGrid');
+        const gamesLoading = document.getElementById('gamesLoading');
+
+        if (!gamesGrid) return;
+
+        try {
+            // Fetch ABaleid's game library from RAWG
+            const response = await fetch(
+                `https://api.rawg.io/api/users/ABaleid/games?key=${RAWG_API_KEY}&statuses=owned,playing,beaten&page_size=6&ordering=-added`
+            );
+
+            if (!response.ok) throw new Error('Failed to fetch games');
+
+            const data = await response.json();
+
+            // Remove loading
+            if (gamesLoading) gamesLoading.remove();
+
+            if (!data.results || data.results.length === 0) {
+                gamesGrid.innerHTML = `
+                    <div class="funzone__error">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4M12 16h.01"/>
+                        </svg>
+                        <p>Unable to load games. Please try again later.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render game cards
+            data.results.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+
+                // Get platform names (limit to 3)
+                const platforms = game.platforms
+                    ? game.platforms.slice(0, 3).map(p => p.platform.name)
+                    : [];
+
+                // Get genres
+                const genres = game.genres
+                    ? game.genres.map(g => g.name).join(', ')
+                    : 'N/A';
+
+                card.innerHTML = `
+                    <img
+                        src="${game.background_image || 'https://via.placeholder.com/400x225?text=No+Image'}"
+                        alt="${game.name}"
+                        class="game-card__image"
+                        loading="lazy"
+                    >
+                    <div class="game-card__info">
+                        <h4 class="game-card__title">${game.name}</h4>
+                        <div class="game-card__meta">
+                            <span class="game-card__rating">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                ${game.rating.toFixed(1)}
+                            </span>
+                            <span>${game.released ? game.released.split('-')[0] : 'N/A'}</span>
+                        </div>
+                        <div class="game-card__platforms">
+                            ${platforms.map(p => `<span class="game-card__platform">${p}</span>`).join('')}
+                        </div>
+                        <p class="game-card__genres">${genres}</p>
+                    </div>
+                `;
+
+                // Add hover animation
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { scale: 1.02, duration: 0.3 });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { scale: 1, duration: 0.3 });
+                });
+
+                gamesGrid.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error('Error fetching games:', error);
+            if (gamesLoading) gamesLoading.remove();
+            gamesGrid.innerHTML = `
+                <div class="funzone__error">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4M12 16h.01"/>
+                    </svg>
+                    <p>Unable to load games. Please try again later.</p>
+                </div>
+            `;
+        }
     }
 }
