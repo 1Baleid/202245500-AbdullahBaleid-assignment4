@@ -1,6 +1,6 @@
 # AI Usage Report
 
-## Assignment 3 - Advanced Functionality
+## Assignment 4 - Final Portfolio
 
 **Student:** Abdullah Baleid
 **Course:** SWE363 - Web Engineering
@@ -148,4 +148,33 @@ I confirm that:
 
 ---
 
-*This report documents my responsible use of AI tools in completing Assignment 3.*
+---
+
+## Assignment 4 Additions
+
+### Claude Code (CLI Tool)
+- **Primary Use:** Project organization, documentation updates, feature implementation
+- **Specific Tasks:**
+  - Updated all documentation from Assignment 3 to Assignment 4 format
+  - Created presentation folder structure
+  - Implemented innovative features (particle trail cursor, confetti effect, Konami code easter egg)
+  - Code review and quality improvements
+  - Technical documentation enhancements
+
+### New Features Implemented with AI Assistance
+
+| Feature | Description | AI Contribution |
+|---------|-------------|-----------------|
+| Particle Trail Cursor | Colorful particles follow mouse movement | Full implementation with physics |
+| Confetti Effect | Celebration animation on form submit | Animation logic and styling |
+| Konami Code Easter Egg | Secret key sequence triggers surprise | Event handling and animation |
+
+### Learning Outcomes (Assignment 4)
+- Using AI CLI tools for efficient development workflow
+- Canvas API for particle effects
+- Complex event handling for keyboard sequences
+- Animation timing and performance optimization
+
+---
+
+*This report documents my responsible use of AI tools in completing Assignment 4.*

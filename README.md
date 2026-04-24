@@ -1,53 +1,45 @@
 # Abdullah Baleid - Portfolio Website
 
-A modern, responsive personal portfolio website built with HTML, CSS, and JavaScript, featuring API integration, advanced state management, and complex interactive logic.
+A modern, responsive personal portfolio website built with HTML, CSS, and JavaScript, featuring API integration, advanced state management, interactive animations, and innovative features.
 
 ## Project Overview
 
-This portfolio showcases my professional profile as a Software Engineering student at KFUPM, including my education, work experience, projects, certifications, and contact information.
+This portfolio showcases my professional profile as a Software Engineering student at KFUPM, including my education, work experience, projects, certifications, and contact information. This is my final portfolio project for SWE363 Web Engineering.
 
-### Features
+### Key Features
+
+**Core Functionality**
 - Responsive design (desktop, tablet, mobile)
 - Smooth GSAP animations and scroll effects
 - Interactive modals for projects and experience
 - Contact form with validation and user feedback
-- Custom CSS cursor (desktop)
 - Dark/Light theme toggle with localStorage persistence
-- Project filtering and sorting by category
+
+**API Integration**
 - GitHub API integration with live repository data
-- Session tracking and visitor analytics
-- Simulated login/logout with personalization
-
-## Assignment 3 Updates
-
-### API Integration
-- **GitHub API**: Fetches and displays public repositories from GitHub
-- Live data including repository name, description, language, stars, and forks
 - Error handling with retry functionality
 - Loading states and user-friendly error messages
 
-### Complex Logic
-- **Combined Filtering + Sorting**: Filter projects by category AND sort by name or category
-- Multi-step form validation with specific error messages
-- Animated transitions when filtering/sorting projects
-- Conditional content display based on user state
+**Complex Logic**
+- Combined project filtering AND sorting
+- Multi-step form validation
+- Animated transitions when filtering/sorting
 
-### State Management
-- **Session Timer**: Tracks time spent on the website (sessionStorage)
-- **Login/Logout Simulation**: Stores user name in localStorage
-- **Personalized Experience**: Greeting with visitor's name
-- **Visit Counter**: Tracks total number of visits
-- **Theme Persistence**: Dark/Light mode saved across sessions
+**State Management**
+- Session timer tracking time on site
+- Login/logout simulation with personalization
+- Visit counter and theme persistence
 
-### Performance Optimization
-- CSS-only custom cursor (no JavaScript tracking overhead)
-- Efficient event delegation
-- Optimized animations with GSAP
-- Lazy loading considerations
+**Innovation Features**
+- Particle trail cursor effect
+- Confetti celebration on form submit
+- Konami code easter egg
+- Magnetic button effects
+- Scroll reveal animations
 
 ## Live Demo
 
-[View Live Site](https://1baleid.github.io/202245500-AbdullahBaleid-assignment3/)
+[View Live Site](https://1baleid.github.io/202245500-AbdullahBaleid-assignment4/)
 
 ## Technology Stack
 
@@ -67,12 +59,12 @@ This portfolio showcases my professional profile as a Software Engineering stude
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/1Baleid/202245500-AbdullahBaleid-assignment3.git
+git clone https://github.com/1Baleid/202245500-AbdullahBaleid-assignment4.git
 ```
 
 2. Navigate to project folder:
 ```bash
-cd 202245500-AbdullahBaleid-assignment3
+cd 202245500-AbdullahBaleid-assignment4
 ```
 
 3. Open in browser:
@@ -91,17 +83,21 @@ python -m http.server 8000
 ## Project Structure
 
 ```
-202245500-AbdullahBaleid-assignment3/
+202245500-AbdullahBaleid-assignment4/
 ├── index.html              # Main HTML file
 ├── css/
-│   └── styles.css          # Styles (3500+ lines)
+│   └── styles.css          # Styles (3800+ lines)
 ├── js/
-│   └── script.js           # JavaScript (2500+ lines)
+│   └── script.js           # JavaScript (2700+ lines)
 ├── assets/
 │   └── images/             # Project images
 ├── docs/
 │   ├── ai-usage-report.md  # AI usage documentation
 │   └── technical-documentation.md
+├── presentation/
+│   ├── README.md           # Presentation guidelines
+│   ├── slides.pdf          # Presentation slides
+│   └── demo-video.mp4      # Demo video
 ├── README.md
 └── .gitignore
 ```
@@ -152,7 +148,7 @@ All AI-generated code was reviewed, understood, and modified to fit project requ
 1. Push your code to GitHub
 2. Go to repository Settings > Pages
 3. Select "Deploy from a branch"
-4. Choose "assignment3" branch and "/ (root)" folder
+4. Choose "main" branch and "/ (root)" folder
 5. Save and wait for deployment
 
 ### Other Options
@@ -187,7 +183,7 @@ All AI-generated code was reviewed, understood, and modified to fit project requ
 
 SWE363 - Web Engineering
 King Fahd University of Petroleum & Minerals (KFUPM)
-Assignment 3 - Advanced Functionality
+Assignment 4 - Final Portfolio
 
 ## License
 

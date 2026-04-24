@@ -1,6 +1,6 @@
 # Technical Documentation
 
-## Portfolio Website - Assignment 3
+## Portfolio Website - Assignment 4 (Final)
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## 1. Project Overview
 
-This portfolio website showcases Abdullah Baleid's professional profile, including education, work experience, projects, certifications, and contact information. Assignment 3 adds API integration, complex logic, and advanced state management.
+This portfolio website showcases Abdullah Baleid's professional profile, including education, work experience, projects, certifications, and contact information. This is the final portfolio assignment demonstrating mastery of web development concepts.
 
 ### Key Features
 - Responsive single-page design
@@ -28,17 +28,18 @@ This portfolio website showcases Abdullah Baleid's professional profile, includi
 - Contact form with enhanced validation
 - Project filtering AND sorting (complex logic)
 - Dark/Light theme toggle with persistence
-- **NEW: GitHub API integration**
-- **NEW: Session tracking with timer**
-- **NEW: Login/logout simulation**
+- GitHub API integration
+- Session tracking with timer
+- Login/logout simulation
 - GSAP-powered scroll animations
 - CSS-only custom cursor
 
-### Assignment 3 Enhancements
-- **API Integration**: GitHub API to fetch and display repositories
-- **Complex Logic**: Combined filtering + sorting with animated transitions
-- **State Management**: Session timer, login simulation, visit counter
-- **Performance**: CSS-only cursor, optimized code
+### Innovation Features (Assignment 4)
+- **Particle Trail Cursor**: Colorful particles follow mouse movement
+- **Confetti Effect**: Celebration animation on form submission
+- **Konami Code Easter Egg**: Secret key sequence reveals surprise
+- **Magnetic Buttons**: Interactive button effects
+- **Scroll Reveal Animations**: Elements animate into view
 
 ---
 
@@ -69,17 +70,21 @@ This portfolio website showcases Abdullah Baleid's professional profile, includi
 ## 3. File Structure
 
 ```
-202245500-AbdullahBaleid-assignment3/
-├── index.html              # Main HTML file (780+ lines)
+202245500-AbdullahBaleid-assignment4/
+├── index.html              # Main HTML file (800+ lines)
 ├── css/
-│   └── styles.css          # All styles (3800+ lines)
+│   └── styles.css          # All styles (3900+ lines)
 ├── js/
-│   └── script.js           # All JavaScript (2500+ lines)
+│   └── script.js           # All JavaScript (2700+ lines)
 ├── assets/
 │   └── images/             # Project images
 ├── docs/
-│   ├── ai-usage-report.md  # AI documentation
+│   ├── ai-usage-report.md  # AI usage documentation
 │   └── technical-documentation.md
+├── presentation/
+│   ├── README.md           # Presentation guidelines
+│   ├── slides.pdf          # Presentation slides
+│   └── demo-video.mp4      # Demo video
 ├── README.md
 └── .gitignore
 ```
@@ -335,10 +340,10 @@ localStorage.setItem('visitCount', visitCount);
 ### Local Development
 ```bash
 # Clone repository
-git clone https://github.com/1Baleid/202245500-AbdullahBaleid-assignment3.git
+git clone https://github.com/1Baleid/202245500-AbdullahBaleid-assignment4.git
 
 # Navigate to project
-cd 202245500-AbdullahBaleid-assignment3
+cd 202245500-AbdullahBaleid-assignment4
 
 # Open in browser
 open index.html

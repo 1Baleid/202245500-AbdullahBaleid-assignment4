@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initGitHubRepos();          // Assignment 3: API Integration
     initSessionTimer();         // Assignment 3: State Management
     initUserSession();          // Assignment 3: Login/Logout
+    initParticleTrail();        // Assignment 4: Particle Trail Cursor
+    initConfetti();             // Assignment 4: Confetti Effect
+    initKonamiCode();           // Assignment 4: Easter Egg
 });
 
 /* ------------------------------------------------
@@ -639,6 +642,11 @@ function initContactForm() {
                 duration: 0.5,
                 ease: 'back.out(1.7)'
             });
+
+            // Trigger confetti celebration (Assignment 4)
+            if (window.triggerConfetti) {
+                window.triggerConfetti();
+            }
 
             form.reset();
             submitBtn.innerHTML = originalText;
@@ -2580,5 +2588,247 @@ function initUserSession() {
             notification.style.transform = 'translateX(120%)';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
+    }
+}
+
+/* ------------------------------------------------
+   Assignment 4: Particle Trail Cursor
+   ------------------------------------------------ */
+function initParticleTrail() {
+    // Skip on touch devices
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
+    const particles = [];
+    const particleCount = 15;
+    const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181'];
+
+    // Create particle elements
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'cursor-particle';
+        particle.style.cssText = `
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: ${colors[i % colors.length]};
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 0 10px ${colors[i % colors.length]};
+        `;
+        document.body.appendChild(particle);
+        particles.push({
+            element: particle,
+            x: 0,
+            y: 0,
+            targetX: 0,
+            targetY: 0,
+            delay: i * 2
+        });
+    }
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        particles.forEach(p => {
+            p.element.style.opacity = '0.8';
+        });
+    });
+
+    document.addEventListener('mouseleave', () => {
+        particles.forEach(p => {
+            p.element.style.opacity = '0';
+        });
+    });
+
+    // Animation loop
+    function animate() {
+        particles.forEach((particle, index) => {
+            const speed = 0.15 - (index * 0.008);
+            particle.x += (mouseX - particle.x) * speed;
+            particle.y += (mouseY - particle.y) * speed;
+
+            const scale = 1 - (index * 0.05);
+            particle.element.style.transform = `translate(${particle.x - 4}px, ${particle.y - 4}px) scale(${scale})`;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+
+/* ------------------------------------------------
+   Assignment 4: Confetti Effect
+   ------------------------------------------------ */
+function initConfetti() {
+    // Store reference to trigger confetti globally
+    window.triggerConfetti = function() {
+        const confettiCount = 150;
+        const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#a8e6cf', '#dfe6e9'];
+
+        for (let i = 0; i < confettiCount; i++) {
+            createConfettiPiece(colors[Math.floor(Math.random() * colors.length)]);
+        }
+    };
+
+    function createConfettiPiece(color) {
+        const confetti = document.createElement('div');
+        const size = Math.random() * 10 + 5;
+        const startX = Math.random() * window.innerWidth;
+
+        confetti.style.cssText = `
+            position: fixed;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            top: -20px;
+            left: ${startX}px;
+            z-index: 99999;
+            pointer-events: none;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+        `;
+
+        document.body.appendChild(confetti);
+
+        const duration = Math.random() * 2 + 2;
+        const rotation = Math.random() * 720 - 360;
+        const drift = Math.random() * 200 - 100;
+
+        gsap.to(confetti, {
+            y: window.innerHeight + 50,
+            x: `+=${drift}`,
+            rotation: rotation,
+            duration: duration,
+            ease: 'power1.out',
+            onComplete: () => confetti.remove()
+        });
+
+        gsap.to(confetti, {
+            opacity: 0,
+            duration: duration * 0.3,
+            delay: duration * 0.7
+        });
+    }
+}
+
+/* ------------------------------------------------
+   Assignment 4: Konami Code Easter Egg
+   ------------------------------------------------ */
+function initKonamiCode() {
+    const konamiCode = [
+        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+        'KeyB', 'KeyA'
+    ];
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === konamiCode[konamiIndex]) {
+            konamiIndex++;
+
+            if (konamiIndex === konamiCode.length) {
+                activateEasterEgg();
+                konamiIndex = 0;
+            }
+        } else {
+            konamiIndex = 0;
+        }
+    });
+
+    function activateEasterEgg() {
+        // Trigger confetti
+        if (window.triggerConfetti) {
+            window.triggerConfetti();
+        }
+
+        // Create matrix rain effect
+        const canvas = document.createElement('canvas');
+        canvas.id = 'matrix-canvas';
+        canvas.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99998;
+            pointer-events: none;
+            opacity: 0.8;
+        `;
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'ABDULLAHBALEIDPORTFOLIO01';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff6b6b';
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        const matrixInterval = setInterval(drawMatrix, 35);
+
+        // Show notification
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+            <div style="text-align: center;">
+                <div style="font-size: 24px; margin-bottom: 10px;">You found the secret!</div>
+                <div style="font-size: 14px; opacity: 0.8;">Konami Code Activated</div>
+            </div>
+        `;
+        notification.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px 50px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff6b6b;
+            border-radius: 20px;
+            color: white;
+            z-index: 99999;
+            box-shadow: 0 0 50px rgba(255, 107, 107, 0.5);
+        `;
+        document.body.appendChild(notification);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            clearInterval(matrixInterval);
+            gsap.to(canvas, {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => canvas.remove()
+            });
+            gsap.to(notification, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.5,
+                onComplete: () => notification.remove()
+            });
+        }, 5000);
     }
 }
