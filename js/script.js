@@ -1413,22 +1413,22 @@ function initCardImages() {
         9: 'assets/images/net-zero.png',
         edu1: 'https://argaamplus.s3.amazonaws.com/be72021d-9734-4f0f-bb5d-dd27b437b815.png',
         edu2: 'https://i0.wp.com/postgrad.com.sg/wp-content/uploads/2019/10/NTU-School-Cover-Image-01.png?resize=760%2C497&ssl=1',
-        edu3: 'https://media.licdn.com/dms/image/v2/C5610AQFzWKdrzdRvPw/videocover-high/videocover-high/0/1702853309863/Kaust_Squaremp4?e=2147483647&v=beta&t=W7wZnYa2j-jU4-cgIMv47qmaLWfPtBc-_ppCWejUqjo'
+        edu3: 'assets/images/Kaust_Squaremp4.jfif'
     };
 
     // Certification data for card images (same as in initCertificationModal)
     const certificationCardImages = {
-        1: 'https://media.licdn.com/dms/image/v2/D4E2DAQF57QCnL6IqZg/profile-treasury-document-images_1280/B4EZw3xPwlIkAU-/1/1770462185971?e=1772064000&v=beta&t=QlZIDxbqF4A7lyS7WuPdAsFx6mISBc00bsg1MLUjsmY',
-        2: 'https://media.licdn.com/dms/image/v2/D4D2DAQH99wuPJnGt7w/profile-treasury-document-images_1280/B4DZX5vJ1OG8AY-/1/1743651645702?e=1772064000&v=beta&t=9XGS3-URBzvV-yOVOil7dpK1AxZI4Rhcqq5dwR9BYLE',
-        3: 'https://media.licdn.com/dms/image/v2/D4D2DAQGOPOWmgv2UGA/profile-treasury-document-images_1280/B4DZX5uyxpGwAY-/1/1743651551471?e=1772064000&v=beta&t=KvVei5Y2ceXAeoCDF-wIQsnlcskwRStxMvYM7DxrBYU',
-        4: 'https://media.licdn.com/dms/image/v2/D4D2DAQFVRLgetZJy-g/profile-treasury-image-shrink_800_800/B4DZbPfpVbGwAY-/0/1747237903123?e=1771671600&v=beta&t=G3cx-wdeyzhh06BkhO8vcei9Sa6x0OrV5Y_9EsBVrRo',
-        5: 'https://media.licdn.com/dms/image/v2/D4D2DAQFFEsiGl6PbgA/profile-treasury-image-shrink_1280_1280/B4DZaxD5GRG8AQ-/0/1746727311944?e=1771671600&v=beta&t=tjWH8fbOP3sE0Ola3dgGgLI3pcLBwokKDXGkUxuyvl0',
+        1: 'assets/images/SAP Certified SAP Generative AI Developer.jfif',
+        2: 'assets/images/KAUST AI Advanced.jfif',
+        3: 'assets/images/KAUST AI Intro .jfif',
+        4: 'assets/images/AI Leauge Certifcate of appreciation.jfif',
+        5: 'assets/images/IELTS.jfif',
         6: 'assets/images/mckinsey-forward.png',
         7: 'assets/images/a-phys101.jpg',
         8: 'assets/images/a-phys102.jpg',
         9: 'assets/images/gemfair.png',
-        10: 'https://media.licdn.com/dms/image/v2/D4D2DAQH_iCuDAyiFyQ/profile-treasury-image-shrink_800_800/B4DZapAyQ.G4AY-/0/1746592278979?e=1771671600&v=beta&t=rHubdSi8VhHGcQF6N9xzce-RRXmTESvU-KHohpO0kUk',
-        11: 'https://media.licdn.com/dms/image/v2/D4E2DAQFzsI1Pl5-6TQ/profile-treasury-image-shrink_1280_1280/B4EZw_As1sKAAQ-/0/1770583675605?e=1771671600&v=beta&t=a8e6jiM-qJ81Mxdos0CoQOgEFnZyah5lBdr3FZIBbHM',
+        10: 'assets/images/Alfozan.jfif',
+        11: 'assets/images/Mena ML Certificateof Participate.jfif',
         12: 'assets/images/NON Academic Transcript.jfif'
     };
 
@@ -1491,7 +1491,7 @@ function initCertificationModal() {
             title: 'SAP Certified Associate',
             organization: 'SAP Generative AI Developer',
             description: `<p>Official SAP certification demonstrating expertise in building generative AI solutions using SAP technologies.</p><p>Validates skills in developing AI-powered business applications and integrating generative AI capabilities into enterprise systems.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4E2DAQF57QCnL6IqZg/profile-treasury-document-images_1280/B4EZw3xPwlIkAU-/1/1770462185971?e=1772064000&v=beta&t=QlZIDxbqF4A7lyS7WuPdAsFx6mISBc00bsg1MLUjsmY',
+            cardImage: 'assets/images/SAP Certified SAP Generative AI Developer.jfif',
             modalImage: ''
         },
         2: {
@@ -1499,7 +1499,7 @@ function initCertificationModal() {
             title: 'Advanced AI Course',
             organization: 'KAUST',
             description: `<p>Advanced AI certification covering Convolutional Neural Networks (CNNs) and Generative AI techniques.</p><p>Completed as part of the AI Specialist Program at King Abdullah University of Science and Technology.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4D2DAQH99wuPJnGt7w/profile-treasury-document-images_1280/B4DZX5vJ1OG8AY-/1/1743651645702?e=1772064000&v=beta&t=9XGS3-URBzvV-yOVOil7dpK1AxZI4Rhcqq5dwR9BYLE',
+            cardImage: 'assets/images/KAUST AI Advanced.jfif',
             modalImage: ''
         },
         3: {
@@ -1507,7 +1507,7 @@ function initCertificationModal() {
             title: 'Intro to AI Course',
             organization: 'KAUST',
             description: `<p>Foundational AI certification covering Linear Regression and Logistic Regression.</p><p>Completed as part of the AI Specialist Program at King Abdullah University of Science and Technology.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4D2DAQGOPOWmgv2UGA/profile-treasury-document-images_1280/B4DZX5uyxpGwAY-/1/1743651551471?e=1772064000&v=beta&t=KvVei5Y2ceXAeoCDF-wIQsnlcskwRStxMvYM7DxrBYU',
+            cardImage: 'assets/images/KAUST AI Intro .jfif',
             modalImage: ''
         },
         4: {
@@ -1515,7 +1515,7 @@ function initCertificationModal() {
             title: 'Certificate of Appreciation',
             organization: 'AI League Finals - Tuwaiq Academy',
             description: `<p>Recognition for outstanding participation and achievement in the AI League Finals competition.</p><p>Developed a smart sports camera system using YOLOv8 for real-time player tracking and automated highlight generation.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4D2DAQFVRLgetZJy-g/profile-treasury-image-shrink_800_800/B4DZbPfpVbGwAY-/0/1747237903123?e=1771671600&v=beta&t=G3cx-wdeyzhh06BkhO8vcei9Sa6x0OrV5Y_9EsBVrRo',
+            cardImage: 'assets/images/AI Leauge Certifcate of appreciation.jfif',
             modalImage: ''
         },
         5: {
@@ -1523,7 +1523,7 @@ function initCertificationModal() {
             title: 'IELTS Band 6.5 (B2)',
             organization: 'English Proficiency',
             description: `<p>International English Language Testing System certification demonstrating B2 level English proficiency.</p><p>Score of 6.5 indicates upper-intermediate English skills for academic and professional contexts.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4D2DAQFFEsiGl6PbgA/profile-treasury-image-shrink_1280_1280/B4DZaxD5GRG8AQ-/0/1746727311944?e=1771671600&v=beta&t=tjWH8fbOP3sE0Ola3dgGgLI3pcLBwokKDXGkUxuyvl0',
+            cardImage: 'assets/images/IELTS.jfif',
             modalImage: ''
         },
         6: {
@@ -1563,7 +1563,7 @@ function initCertificationModal() {
             title: 'Community Work Fundamentals',
             organization: 'Al Fozan Academy + Aramco',
             description: `<p>Certification in community work fundamentals jointly offered by Al Fozan Academy and Aramco.</p><p>Covered principles of community engagement, volunteer management, and social impact initiatives.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4D2DAQH_iCuDAyiFyQ/profile-treasury-image-shrink_800_800/B4DZapAyQ.G4AY-/0/1746592278979?e=1771671600&v=beta&t=rHubdSi8VhHGcQF6N9xzce-RRXmTESvU-KHohpO0kUk',
+            cardImage: 'assets/images/Alfozan.jfif',
             modalImage: ''
         },
         11: {
@@ -1571,7 +1571,15 @@ function initCertificationModal() {
             title: 'MENA Machine Learning Winter School 2026',
             organization: 'King Abdullah University of Science and Technology (KAUST)',
             description: `<p>Certificate of Participation for active participation and successful completion of the <strong>MENA Machine Learning Winter School 2026 (MenaML)</strong>.</p><p>Held at King Abdullah University of Science and Technology, Saudi Arabia, from <strong>24 - 29 January 2026</strong>.</p><p>Selected among <strong>300 participants from 2,222 applicants</strong> (13.5% acceptance rate) for this prestigious ML school.</p><p>Featured lectures by <strong>Google DeepMind researchers</strong> covering cutting-edge machine learning topics.</p><p><strong>Directors:</strong> Dr. Safa Messaoud, Maria Abi</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/D4E2DAQFzsI1Pl5-6TQ/profile-treasury-image-shrink_1280_1280/B4EZw_As1sKAAQ-/0/1770583675605?e=1771671600&v=beta&t=a8e6jiM-qJ81Mxdos0CoQOgEFnZyah5lBdr3FZIBbHM',
+            cardImage: 'assets/images/Mena ML Certificateof Participate.jfif',
+            modalImage: ''
+        },
+        12: {
+            date: '2025',
+            title: 'Non-Academic Transcript',
+            organization: 'KFUPM - Extracurricular Activities',
+            description: `<p>Official Non-Academic Transcript from King Fahd University of Petroleum and Minerals.</p><p>Documents participation in extracurricular activities, clubs, volunteer work, and other non-academic achievements during university studies.</p>`,
+            cardImage: 'assets/images/NON Academic Transcript.jfif',
             modalImage: ''
         }
     };
