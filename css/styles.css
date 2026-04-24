@@ -3450,6 +3450,21 @@ textarea {
         display: none;
     }
 
+    .nav__container {
+        justify-content: space-between;
+        gap: var(--space-sm);
+    }
+
+    .nav__logo {
+        margin-right: auto;
+        padding-left: 0;
+    }
+
+    .theme-toggle,
+    .nav__toggle {
+        flex: 0 0 auto;
+    }
+
     .nav__toggle {
         display: flex;
     }
@@ -3766,7 +3781,7 @@ textarea {
 
 @media (max-width: 1024px) {
     .mobile-social-bar {
-        display: flex;
+        display: none;
     }
 
     .hero__socials {
@@ -3775,6 +3790,24 @@ textarea {
 }
 
 @media (max-width: 640px) {
+    .nav {
+        padding: var(--space-md) 0;
+    }
+
+    .nav--scrolled .nav__container {
+        padding: var(--space-xs) var(--space-md);
+        border-radius: var(--radius-xl);
+    }
+
+    .theme-toggle,
+    .nav__toggle {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: var(--space-sm);
+    }
+
     .mobile-social-bar {
         bottom: var(--space-md);
         padding: var(--space-xs) var(--space-lg);
