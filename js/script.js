@@ -1428,7 +1428,8 @@ function initCardImages() {
         8: 'assets/images/a-phys102.jpg',
         9: 'assets/images/gemfair.png',
         10: 'https://media.licdn.com/dms/image/v2/D4D2DAQH_iCuDAyiFyQ/profile-treasury-image-shrink_800_800/B4DZapAyQ.G4AY-/0/1746592278979?e=1771671600&v=beta&t=rHubdSi8VhHGcQF6N9xzce-RRXmTESvU-KHohpO0kUk',
-        11: 'https://media.licdn.com/dms/image/v2/D4E2DAQFzsI1Pl5-6TQ/profile-treasury-image-shrink_1280_1280/B4EZw_As1sKAAQ-/0/1770583675605?e=1771671600&v=beta&t=a8e6jiM-qJ81Mxdos0CoQOgEFnZyah5lBdr3FZIBbHM'
+        11: 'https://media.licdn.com/dms/image/v2/D4E2DAQFzsI1Pl5-6TQ/profile-treasury-image-shrink_1280_1280/B4EZw_As1sKAAQ-/0/1770583675605?e=1771671600&v=beta&t=a8e6jiM-qJ81Mxdos0CoQOgEFnZyah5lBdr3FZIBbHM',
+        12: 'assets/images/NON Academic Transcript.jfif'
     };
 
     // Load experience timeline card images
