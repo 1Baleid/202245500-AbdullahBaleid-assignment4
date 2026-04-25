@@ -41,6 +41,10 @@ This portfolio showcases my professional profile as a Software Engineering stude
 
 [View Live Site](https://1baleid.github.io/202245500-AbdullahBaleid-assignment4/)
 
+## Video Presentation
+
+[Watch on YouTube](https://youtu.be/meaGmbhjwwM)
+
 ## Technology Stack
 
 - **HTML5** - Semantic structure
