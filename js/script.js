@@ -2907,8 +2907,11 @@ function initFunZone() {
 
             // Render movie cards
             validMovies.forEach(movie => {
-                const card = document.createElement('div');
+                const card = document.createElement('a');
                 card.className = 'movie-card';
+                card.href = `https://www.imdb.com/title/${movie.imdbID}`;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
                 card.innerHTML = `
                     <img
                         src="${movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'}"

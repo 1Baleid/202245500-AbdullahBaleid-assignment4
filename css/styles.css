@@ -3300,11 +3300,14 @@ textarea {
 
 /* Movie Card */
 .movie-card {
+    display: block;
+    text-decoration: none;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     overflow: hidden;
     transition: all var(--transition-base);
+    cursor: pointer;
 }
 
 .movie-card:hover {
