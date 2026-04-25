@@ -39,7 +39,7 @@ This portfolio showcases my professional profile as a Software Engineering stude
 
 ## Live Demo
 
-[View Live Site](https://1baleid.github.io/202245500-AbdullahBaleid-assignment4/)
+[View Live Site](https://abdullah-baleid-portfolio.vercel.app/)
 
 ## Video Presentation
 
