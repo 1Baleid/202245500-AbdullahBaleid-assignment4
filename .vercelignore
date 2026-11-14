@@ -1,0 +1,23 @@
+# Kept in the GitHub repo, but not served on the live site.
+
+# Coursework (SWE363) material
+docs
+presentation
+portfolio assignment-*.md
+Instruction_Portfolio_Website_Build
+README.md
+
+# Source files that the site now serves in optimized form
+alfont_com_Palestine-Regular.ttf
+assets/images/*.jfif
+assets/images/gemfair.png
+assets/images/mckinsey-forward.png
+assets/images/a-phys101.jpg
+assets/images/a-phys102.jpg
+assets/images/aifa-club.png
+assets/images/arkan.png
+assets/images/codelink.png
+assets/images/kfupm-ses.png
+assets/images/sdaia-jrcai.png
+assets/images/net-zero.png
+assets/images/me-singapore.jpg

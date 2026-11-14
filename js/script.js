@@ -1,3059 +1,535 @@
-/* ================================================
-   PORTFOLIO - Main JavaScript
-   Advanced GSAP Animations & Premium Interactions
-   ================================================ */
+/* ==========================================================================
+   Abdullah Baleid — Portfolio
+   Small, dependency-free enhancements. The page is fully readable without JS:
+   if this file fails to load or boot, the inline head script removes the
+   `js` class after 3 s so nothing stays hidden.
+   ========================================================================== */
+(function () {
+    'use strict';
 
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+    var root = document.documentElement;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all modules
-    initLoader();
-    initCustomCursor();
-    initNavigation();
-    initHeroAnimations();
-    initTypingEffect();
-    initScrollProgress();
-    initScrollReveal();
-    initProjectFilter();
-    initProjectSort();          // Assignment 3: Sorting
-    initContactForm();
-    initCounterAnimation();
-    initParticles();
-    initSmoothScroll();
-    initCurrentYear();
-    initMagneticButtons();
-    initTiltCards();
-    initTextSplit();
-    initParallaxEffects();
-    initJourneySection();
-    initExperienceModal();
-    initProjectModal();
-    initCardImages();
-    initThemeToggle();
-    initGitHubRepos();          // Assignment 3: API Integration
-    initSessionTimer();         // Assignment 3: State Management
-    initUserSession();          // Assignment 3: Login/Logout
-    initParticleTrail();        // Assignment 4: Particle Trail Cursor
-    initConfetti();             // Assignment 4: Confetti Effect
-    initKonamiCode();           // Assignment 4: Easter Egg
-    initFunZone();              // Assignment 4: OMDb & RAWG APIs
-});
+    // If the head failsafe already fired (very slow load), skip reveal animations.
+    var lateBoot = !root.classList.contains('js');
+    root.classList.add('js');
 
-/* ------------------------------------------------
-   Page Loader & Initial Animation
-   ------------------------------------------------ */
-function initLoader() {
-    // Register GSAP plugins
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Initial page load animation
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    // Fade in body
-    tl.to('body', {
-        opacity: 1,
-        duration: 0.1
-    });
-
-    // Animate background grid
-    gsap.from('.bg-grid', {
-        opacity: 0,
-        duration: 2,
-        ease: 'power2.out'
-    });
-}
-
-/* ------------------------------------------------
-   Custom Cursor
-   ------------------------------------------------ */
-function initCustomCursor() {
-    // Custom cursor is now handled entirely via CSS
-    // This function is kept for compatibility but does nothing
-    // The CSS uses cursor: url(...) for custom cursor styling
-
-    // On touch devices, reset to default cursor
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        document.body.style.cursor = 'auto';
+    function safeGet(storage, key) {
+        try { return window[storage].getItem(key); } catch (e) { return null; }
     }
-}
-
-/* ------------------------------------------------
-   Navigation
-   ------------------------------------------------ */
-function initNavigation() {
-    const nav = document.getElementById('nav');
-    const navToggle = document.getElementById('navToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    const navLinks = document.querySelectorAll('.nav__link');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav__link');
-
-    // Scroll behavior - add/remove scrolled class
-    let lastScroll = 0;
-
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll > 50) {
-            nav.classList.add('nav--scrolled');
-        } else {
-            nav.classList.remove('nav--scrolled');
-        }
-
-        lastScroll = currentScroll;
-    });
-
-    // Mobile navigation toggle
-    navToggle.addEventListener('click', () => {
-        navToggle.classList.toggle('active');
-        mobileNav.classList.toggle('active');
-        document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
-    });
-
-    // Close mobile nav when clicking a link
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navToggle.classList.remove('active');
-            mobileNav.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-    });
-
-    // Active link highlighting based on scroll position
-    const sections = document.querySelectorAll('section[id]');
-
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
-
-        sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 100;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        });
-    });
-
-    // Animate nav on load
-    gsap.fromTo('.nav',
-        {
-            y: -100,
-            opacity: 0
-        },
-        {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            delay: 0.5,
-            ease: 'power3.out',
-            clearProps: 'transform'
-        }
-    );
-}
-
-/* ------------------------------------------------
-   Hero Section Animations
-   ------------------------------------------------ */
-function initHeroAnimations() {
-    const heroTl = gsap.timeline({ delay: 0.5 });
-
-    // Set initial states
-    gsap.set('.hero__greeting, .hero__name-first, .hero__name-last, .hero__description, .hero__cta', {
-        opacity: 0,
-        y: 50
-    });
-
-    gsap.set('.hero__title', {
-        opacity: 0,
-        y: 30
-    });
-
-    gsap.set('.hero__visual', {
-        opacity: 0,
-        scale: 0.8,
-        rotate: -5
-    });
-
-    gsap.set('.hero__social-link', {
-        opacity: 0,
-        x: -30
-    });
-
-    gsap.set('.hero__scroll', {
-        opacity: 0,
-        y: 20
-    });
-
-    // Animate hero elements with stagger
-    heroTl
-        .to('.hero__greeting', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power4.out'
-        })
-        .to('.hero__name-first', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power4.out'
-        }, '-=0.6')
-        .to('.hero__name-last', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power4.out'
-        }, '-=0.7')
-        .to('.hero__title', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, '-=0.5')
-        .to('.hero__description', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, '-=0.4')
-        .to('.hero__cta', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, '-=0.3')
-        .to('.hero__visual', {
-            opacity: 1,
-            scale: 1,
-            rotate: 0,
-            duration: 1.2,
-            ease: 'elastic.out(1, 0.8)'
-        }, '-=0.8')
-        .to('.hero__social-link', {
-            opacity: 1,
-            x: 0,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: 'power3.out'
-        }, '-=0.6')
-        .to('.hero__scroll', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out'
-        }, '-=0.3');
-
-    // Floating animation for hero visual
-    gsap.to('.hero__visual', {
-        y: -20,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: 2
-    });
-
-    // Animate hero orbs
-    gsap.to('.hero__orb--1', {
-        x: 50,
-        y: -30,
-        duration: 8,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut'
-    });
-
-    gsap.to('.hero__orb--2', {
-        x: -40,
-        y: 50,
-        duration: 10,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut'
-    });
-
-    gsap.to('.hero__orb--3', {
-        x: 30,
-        y: 40,
-        duration: 7,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut'
-    });
-
-    // Parallax effect on scroll
-    gsap.to('.hero__gradient', {
-        scrollTrigger: {
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1
-        },
-        y: 150,
-        opacity: 0.3
-    });
-
-    // Scale down hero on scroll
-    gsap.to('.hero__content', {
-        scrollTrigger: {
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1
-        },
-        scale: 0.9,
-        opacity: 0.5
-    });
-
-    // Arabic name background - scroll fade effect
-    const arabicName = document.getElementById('arabicName');
-    if (arabicName) {
-        // Set initial state
-        gsap.set('.hero__arabic-name', { opacity: 1 });
-
-        // Scroll effect - fades out going down, fades back in going up
-        ScrollTrigger.create({
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                gsap.set('.hero__arabic-name', {
-                    opacity: 1 - progress,
-                    y: -50 * progress
-                });
-            }
-        });
+    function safeSet(storage, key, value) {
+        try { window[storage].setItem(key, value); } catch (e) { /* storage unavailable */ }
     }
-}
-
-/* ------------------------------------------------
-   Text Split Animation
-   ------------------------------------------------ */
-function initTextSplit() {
-    // Animate section titles with character split
-    const titles = document.querySelectorAll('.section-header__title');
-
-    titles.forEach(title => {
-        const text = title.textContent;
-        title.innerHTML = '';
-
-        text.split('').forEach((char, i) => {
-            const span = document.createElement('span');
-            span.textContent = char === ' ' ? '\u00A0' : char;
-            span.style.display = 'inline-block';
-            span.style.opacity = '0';
-            span.style.transform = 'translateY(50px) rotateX(-90deg)';
-            title.appendChild(span);
-        });
-
-        gsap.to(title.querySelectorAll('span'), {
-            scrollTrigger: {
-                trigger: title,
-                start: 'top 85%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            duration: 0.8,
-            stagger: 0.03,
-            ease: 'back.out(1.7)'
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Typing Effect
-   ------------------------------------------------ */
-function initTypingEffect() {
-    const typedElement = document.getElementById('typedText');
-    const titles = [
-        'Software Engineer',
-        'AI Developer',
-        'Research Assistant',
-        'SAP GenAI Developer'
-    ];
-    let titleIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let typingSpeed = 100;
-
-    function type() {
-        const currentTitle = titles[titleIndex];
-
-        if (isDeleting) {
-            typedElement.textContent = currentTitle.substring(0, charIndex - 1);
-            charIndex--;
-            typingSpeed = 50;
-        } else {
-            typedElement.textContent = currentTitle.substring(0, charIndex + 1);
-            charIndex++;
-            typingSpeed = 100;
-        }
-
-        if (!isDeleting && charIndex === currentTitle.length) {
-            isDeleting = true;
-            typingSpeed = 2000; // Pause at end
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            titleIndex = (titleIndex + 1) % titles.length;
-            typingSpeed = 500; // Pause before new word
-        }
-
-        setTimeout(type, typingSpeed);
+    // MediaQueryList change listener with a fallback for Safari < 14
+    function onMediaChange(mql, fn) {
+        if (mql.addEventListener) mql.addEventListener('change', fn);
+        else if (mql.addListener) mql.addListener(fn);
     }
 
-    // Start typing after hero animation
-    setTimeout(type, 2000);
-}
+    // Re-anchors a #hash deep link after late layout shifts (fonts, GitHub cards)
+    var realignHash = function () {};
 
-/* ------------------------------------------------
-   Scroll Progress Bar
-   ------------------------------------------------ */
-function initScrollProgress() {
-    const progressBar = document.getElementById('progressBar');
+    /* ------------------------------------------------------------------
+       Theme toggle (light / dark, follows the OS until the visitor picks)
+       ------------------------------------------------------------------ */
+    function initTheme() {
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+        var metas = Array.prototype.slice.call(document.querySelectorAll('meta[name="theme-color"]'));
 
-    window.addEventListener('scroll', () => {
-        const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = (window.pageYOffset / windowHeight) * 100;
-        progressBar.style.width = `${progress}%`;
-    });
-}
+        function current() {
+            var set = root.getAttribute('data-theme');
+            if (set === 'light' || set === 'dark') return set;
+            return systemDark.matches ? 'dark' : 'light';
+        }
+        function syncMeta() {
+            var set = root.getAttribute('data-theme');
+            if (set !== 'light' && set !== 'dark') return;
+            metas.forEach(function (m) { m.setAttribute('content', set === 'dark' ? '#0c0c0d' : '#f5f3ef'); });
+        }
+        function sync() {
+            var next = current() === 'dark' ? 'light' : 'dark';
+            btn.setAttribute('aria-label', 'Switch to ' + next + ' theme');
+        }
 
-/* ------------------------------------------------
-   Scroll Reveal Animations
-   ------------------------------------------------ */
-function initScrollReveal() {
-    // Reveal elements on scroll - faster animations
-    const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
-
-    revealElements.forEach(element => {
-        const direction = element.classList.contains('reveal-left') ? -30 :
-                         element.classList.contains('reveal-right') ? 30 : 0;
-
-        gsap.set(element, {
-            opacity: 0,
-            x: direction,
-            y: element.classList.contains('reveal-up') ? 30 : 0
+        btn.addEventListener('click', function () {
+            var next = current() === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            safeSet('localStorage', 'theme', next);
+            syncMeta();
+            sync();
         });
+        onMediaChange(systemDark, sync);
+        sync();
+        syncMeta();
+    }
 
-        gsap.to(element, {
-            scrollTrigger: {
-                trigger: element,
-                start: 'top 90%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            x: 0,
-            y: 0,
-            duration: 0.4,
-            ease: 'power2.out'
-        });
-    });
+    /* ------------------------------------------------------------------
+       Header: scrolled state, mobile menu, active section link
+       ------------------------------------------------------------------ */
+    function initHeader() {
+        var header = document.getElementById('siteHeader');
+        var nav = document.getElementById('siteNav');
+        var toggle = document.getElementById('menuToggle');
+        if (!header) return;
 
-    // Simple fade-in for project rows
-    const projectRows = document.querySelectorAll('.project-row');
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(function () {
+                header.classList.toggle('is-scrolled', window.scrollY > 8);
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
 
-    projectRows.forEach((row, index) => {
-        gsap.set(row, { opacity: 0, y: 20 });
-
-        gsap.to(row, {
-            scrollTrigger: {
-                trigger: row,
-                start: 'top 95%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            y: 0,
-            duration: 0.3,
-            delay: index * 0.05,
-            ease: 'power2.out'
-        });
-    });
-
-}
-
-/* ------------------------------------------------
-   Project Filter (Disabled - using simple list now)
-   ------------------------------------------------ */
-function initProjectFilter() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const allProjectRows = document.querySelectorAll('.project-row');
-
-    if (!filterButtons.length || !allProjectRows.length) return;
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            button.classList.add('active');
-
-            const filterValue = button.getAttribute('data-filter').trim().toLowerCase();
-
-            allProjectRows.forEach(row => {
-                const categoryEl = row.querySelector('.project-row__category');
-                const category = categoryEl ? categoryEl.textContent.trim().toLowerCase() : '';
-
-                if (filterValue === 'all' || category === filterValue) {
-                    // Show with animation
-                    row.style.display = 'block';
-                    gsap.to(row, {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
-                } else {
-                    // Hide with animation
-                    gsap.to(row, {
-                        opacity: 0,
-                        scale: 0.95,
-                        duration: 0.3,
-                        ease: 'power2.out',
-                        onComplete: () => row.style.display = 'none'
-                    });
+        if (toggle && nav) {
+            var setOpen = function (open, moveFocus) {
+                nav.classList.toggle('is-open', open);
+                header.classList.toggle('menu-open', open);
+                toggle.setAttribute('aria-expanded', String(open));
+                toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                if (open && moveFocus) {
+                    var first = nav.querySelector('a');
+                    if (first) first.focus();
+                }
+            };
+            toggle.addEventListener('click', function () {
+                setOpen(toggle.getAttribute('aria-expanded') !== 'true', true);
+            });
+            // Any link in the header (nav items or the brand) closes the menu
+            header.addEventListener('click', function (e) {
+                if (e.target.closest('a')) setOpen(false);
+            });
+            // Close when keyboard focus leaves the header
+            header.addEventListener('focusout', function (e) {
+                if (nav.classList.contains('is-open') && e.relatedTarget && !header.contains(e.relatedTarget)) setOpen(false);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+                    setOpen(false);
+                    toggle.focus();
                 }
             });
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Contact Form
-   ------------------------------------------------ */
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    const formSuccess = document.getElementById('formSuccess');
-    const nameError = document.getElementById('nameError');
-    const emailError = document.getElementById('emailError');
-    const messageError = document.getElementById('messageError');
-
-    if (!form) return;
-
-    // Clear errors on input
-    const inputs = form.querySelectorAll('.form-input');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const errorId = input.id + 'Error';
-            const errorEl = document.getElementById(errorId);
-            if (errorEl) {
-                errorEl.classList.remove('show');
-                errorEl.textContent = '';
-            }
-        });
-    });
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Clear previous errors
-        [nameError, emailError, messageError].forEach(error => {
-            error.classList.remove('show');
-            error.textContent = '';
-        });
-
-        // Get form data
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
-
-        let hasErrors = false;
-
-        // Name validation
-        if (!data.name.trim()) {
-            nameError.textContent = 'Name is required';
-            nameError.classList.add('show');
-            hasErrors = true;
-        } else if (data.name.trim().length < 2) {
-            nameError.textContent = 'Name must be at least 2 characters';
-            nameError.classList.add('show');
-            hasErrors = true;
-        }
-
-        // Email validation - more robust regex
-        const emailValue = data.email.trim();
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailValue) {
-            emailError.textContent = 'Email is required';
-            emailError.classList.add('show');
-            hasErrors = true;
-        } else if (!emailRegex.test(emailValue)) {
-            emailError.textContent = 'Please enter a valid email address (e.g., name@example.com)';
-            emailError.classList.add('show');
-            hasErrors = true;
-        }
-
-        // Message validation
-        if (!data.message.trim()) {
-            messageError.textContent = 'Message is required';
-            messageError.classList.add('show');
-            hasErrors = true;
-        } else if (data.message.trim().length < 10) {
-            messageError.textContent = 'Message must be at least 10 characters';
-            messageError.classList.add('show');
-            hasErrors = true;
-        }
-
-        if (hasErrors) {
-            // Shake animation for invalid form
-            gsap.to(form, {
-                x: [-10, 10, -10, 10, 0],
-                duration: 0.4,
-                ease: 'power2.out'
+            document.addEventListener('click', function (e) {
+                if (nav.classList.contains('is-open') && !header.contains(e.target)) setOpen(false);
             });
+            onMediaChange(window.matchMedia('(min-width: 961px)'), function (mq) {
+                if (mq.matches) setOpen(false);
+            });
+        }
+
+        // Highlight the nav link for the section currently in view
+        var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav__link'));
+        if (!('IntersectionObserver' in window) || !links.length) return;
+        var byId = {};
+        links.forEach(function (link) {
+            var id = link.getAttribute('href').slice(1);
+            if (document.getElementById(id)) byId[id] = link;
+        });
+        // Sections without their own nav link map to the closest one
+        var alias = { github: 'awards' };
+        var observed = Object.keys(byId).concat(Object.keys(alias));
+        var visible = {};
+
+        var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                visible[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
+            });
+            var best = null, bestRatio = 0;
+            observed.forEach(function (id) {
+                if ((visible[id] || 0) > bestRatio) { bestRatio = visible[id]; best = id; }
+            });
+            var activeId = best ? (alias[best] || best) : null;
+            links.forEach(function (link) {
+                var on = activeId && link === byId[activeId];
+                link.classList.toggle('is-active', !!on);
+                if (on) link.setAttribute('aria-current', 'location');
+                else link.removeAttribute('aria-current');
+            });
+        }, { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.01, 0.25, 0.5, 1] });
+
+        observed.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) spy.observe(el);
+        });
+    }
+
+    /* ------------------------------------------------------------------
+       Deep links: keep #section targets aligned after late layout shifts
+       ------------------------------------------------------------------ */
+    function initHashFix() {
+        var id = '';
+        try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
+        var target = id && document.getElementById(id);
+        if (!target) return;
+        var userMoved = false;
+        ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
+            window.addEventListener(t, function () { userMoved = true; }, { once: true, passive: true });
+        });
+        realignHash = function () {
+            if (!userMoved) target.scrollIntoView({ block: 'start' });
+        };
+        window.addEventListener('load', function () {
+            var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+            ready.then(function () { realignHash(); });
+        });
+    }
+
+    /* ------------------------------------------------------------------
+       Reveal on scroll
+       ------------------------------------------------------------------ */
+    function initReveal() {
+        var items = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+        if (!items.length) return;
+
+        function settle(el) {
+            // Once revealed, drop the reveal hooks so hover transitions behave normally
+            el.removeAttribute('data-reveal');
+            el.style.removeProperty('--reveal-delay');
+        }
+        function show(el) {
+            el.classList.add('is-visible');
+            var done = false;
+            function finish() { if (!done) { done = true; settle(el); } }
+            el.addEventListener('transitionend', function handler(e) {
+                if (e.target !== el) return;
+                el.removeEventListener('transitionend', handler);
+                finish();
+            });
+            window.setTimeout(finish, 1600);
+        }
+
+        if (lateBoot || reduceMotion.matches || !('IntersectionObserver' in window)) {
+            items.forEach(settle);
             return;
         }
 
-        // Simulate form submission
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
+        // Stagger siblings that enter together
+        var io = new IntersectionObserver(function (entries) {
+            var batch = entries.filter(function (e) { return e.isIntersecting; });
+            batch.forEach(function (entry, i) {
+                entry.target.style.setProperty('--reveal-delay', Math.min(i * 0.07, 0.35) + 's');
+                show(entry.target);
+                io.unobserve(entry.target);
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
-        // Loading animation
-        gsap.to(submitBtn, {
-            scale: 0.95,
-            duration: 0.2
+        items.forEach(function (el) { io.observe(el); });
+    }
+
+    /* ------------------------------------------------------------------
+       Pause / resume looping animations (WCAG 2.2.2)
+       ------------------------------------------------------------------ */
+    function initMotionToggle() {
+        var btn = document.getElementById('motionToggle');
+        if (!btn) return;
+        if (safeGet('localStorage', 'motion') === 'paused') {
+            root.classList.add('motion-paused');
+            btn.setAttribute('aria-pressed', 'true');
+            btn.setAttribute('aria-label', 'Play animations');
+        }
+        btn.addEventListener('click', function () {
+            var paused = root.classList.toggle('motion-paused');
+            btn.setAttribute('aria-pressed', String(paused));
+            btn.setAttribute('aria-label', paused ? 'Play animations' : 'Pause animations');
+            safeSet('localStorage', 'motion', paused ? 'paused' : 'playing');
         });
-        submitBtn.innerHTML = '<span>Sending...</span>';
-        submitBtn.disabled = true;
+    }
 
-        // Simulate API delay
-        setTimeout(() => {
-            // Success animation
-            gsap.to(submitBtn, {
-                scale: 1,
-                duration: 0.3,
-                ease: 'back.out(1.7)'
-            });
+    /* ------------------------------------------------------------------
+       Project filter
+       ------------------------------------------------------------------ */
+    function initFilters() {
+        var buttons = Array.prototype.slice.call(document.querySelectorAll('.filter'));
+        var projects = Array.prototype.slice.call(document.querySelectorAll('#work .project'));
+        var empty = document.getElementById('projectsEmpty');
+        if (!buttons.length || !projects.length) return;
 
-            // Show success message with animation
-            formSuccess.classList.add('show');
-            gsap.from(formSuccess, {
-                scale: 0.8,
-                opacity: 0,
-                duration: 0.5,
-                ease: 'back.out(1.7)'
-            });
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var filter = btn.getAttribute('data-filter');
+                buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
 
-            // Trigger confetti celebration (Assignment 4)
-            if (window.triggerConfetti) {
-                window.triggerConfetti();
-            }
-
-            form.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                gsap.to(formSuccess, {
-                    opacity: 0,
-                    scale: 0.8,
-                    duration: 0.3,
-                    onComplete: () => {
-                        formSuccess.classList.remove('show');
-                        formSuccess.style.opacity = '';
-                        formSuccess.style.transform = '';
+                var shown = 0;
+                projects.forEach(function (p) {
+                    var tags = (p.getAttribute('data-tags') || '').split(/\s+/);
+                    var match = filter === 'all' || tags.indexOf(filter) !== -1;
+                    p.hidden = !match;
+                    if (match) {
+                        shown++;
+                        // Filtered-in cards must be visible even if they never scrolled into view
+                        p.classList.add('is-visible');
+                        p.removeAttribute('data-reveal');
                     }
                 });
-            }, 5000);
-        }, 1500);
-    });
-
-    // Enhanced focus animations for form inputs
-    const formInputs = form.querySelectorAll('.form-input');
-
-    formInputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            gsap.to(input, {
-                scale: 1.02,
-                boxShadow: '0 0 30px rgba(255, 107, 107, 0.3)',
-                duration: 0.3,
-                ease: 'power2.out'
+                if (empty) empty.hidden = shown !== 0;
             });
         });
-
-        input.addEventListener('blur', () => {
-            gsap.to(input, {
-                scale: 1,
-                boxShadow: 'none',
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Theme Toggle
-   ------------------------------------------------ */
-function initThemeToggle() {
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-
-    if (!themeToggle) return;
-
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        body.classList.add('light-theme');
-        themeToggle.classList.add('dark'); // Since it's currently light, button shows moon
     }
 
-    themeToggle.addEventListener('click', () => {
-        const isLight = body.classList.contains('light-theme');
-
-        if (isLight) {
-            // Switch to dark
-            gsap.to(body, {
-                backgroundColor: '#050505',
-                duration: 0.5,
-                ease: 'power2.out',
-                onComplete: () => {
-                    body.classList.remove('light-theme');
-                    localStorage.setItem('theme', 'dark');
-                    themeToggle.classList.remove('dark');
-                }
-            });
-        } else {
-            // Switch to light
-            gsap.to(body, {
-                backgroundColor: '#ffffff',
-                duration: 0.5,
-                ease: 'power2.out',
-                onStart: () => {
-                    body.classList.add('light-theme');
-                },
-                onComplete: () => {
-                    localStorage.setItem('theme', 'light');
-                    themeToggle.classList.add('dark');
-                }
-            });
-        }
-    });
-}
-
-/* ------------------------------------------------
-   Counter Animation
-   ------------------------------------------------ */
-function initCounterAnimation() {
-    const counters = document.querySelectorAll('.about__stat-number');
-
-    counters.forEach(counter => {
-        const target = parseInt(counter.dataset.count);
-
-        gsap.to(counter, {
-            scrollTrigger: {
-                trigger: counter,
-                start: 'top 85%',
-                toggleActions: 'play none none none'
-            },
-            textContent: target,
-            duration: 2,
-            ease: 'power2.out',
-            snap: { textContent: 1 },
-            onUpdate: function() {
-                counter.textContent = Math.round(this.targets()[0].textContent) + '+';
-            }
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Particles Background
-   ------------------------------------------------ */
-function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
-
-    // Create floating particles
-    const particleCount = 50;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        const size = Math.random() * 4 + 1;
-        particle.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            background: rgba(255, 107, 107, ${Math.random() * 0.4 + 0.1});
-            border-radius: 50%;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            box-shadow: 0 0 ${size * 2}px rgba(255, 107, 107, 0.3);
-        `;
-        particlesContainer.appendChild(particle);
-
-        // Complex movement animation
-        gsap.to(particle, {
-            y: `random(-100, 100)`,
-            x: `random(-50, 50)`,
-            duration: `random(4, 8)`,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: Math.random() * 3
-        });
-
-        // Pulsing glow
-        gsap.to(particle, {
-            opacity: `random(0.2, 0.8)`,
-            scale: `random(0.8, 1.5)`,
-            duration: `random(2, 4)`,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: Math.random() * 2
-        });
-    }
-}
-
-/* ------------------------------------------------
-   Smooth Scroll
-   ------------------------------------------------ */
-function initSmoothScroll() {
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (href === '#') return;
-
-            const target = document.querySelector(href);
-            if (!target) return;
-
-            e.preventDefault();
-
-            const offsetTop = target.offsetTop - 80;
-
-            // Use native smooth scroll for better performance
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Set Current Year in Footer
-   ------------------------------------------------ */
-function initCurrentYear() {
-    const yearElement = document.getElementById('currentYear');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
-}
-
-/* ------------------------------------------------
-   Magnetic Buttons
-   ------------------------------------------------ */
-function initMagneticButtons() {
-    const magneticElements = document.querySelectorAll('.btn, .nav__link, .filter-btn');
-
-    magneticElements.forEach(element => {
-        element.addEventListener('mousemove', (e) => {
-            const rect = element.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-
-            gsap.to(element, {
-                x: x * 0.3,
-                y: y * 0.3,
-                duration: 0.4,
-                ease: 'power2.out'
-            });
-        });
-
-        element.addEventListener('mouseleave', () => {
-            gsap.to(element, {
-                x: 0,
-                y: 0,
-                duration: 0.6,
-                ease: 'elastic.out(1, 0.5)'
-            });
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Tilt Cards
-   ------------------------------------------------ */
-function initTiltCards() {
-    // Tilt effect disabled for better performance
-}
-
-/* ------------------------------------------------
-   Parallax Effects
-   ------------------------------------------------ */
-function initParallaxEffects() {
-    // Simplified - removed heavy scrub animations for better performance
-}
-
-/* ------------------------------------------------
-   Image lazy loading intersection observer
-   ------------------------------------------------ */
-const lazyImages = document.querySelectorAll('img[data-src]');
-
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-
-                // Animate image on load
-                gsap.from(img, {
-                    opacity: 0,
-                    scale: 1.1,
-                    duration: 0.6,
-                    ease: 'power2.out'
-                });
-
-                observer.unobserve(img);
-            }
-        });
-    }, {
-        rootMargin: '50px 0px'
-    });
-
-    lazyImages.forEach(img => imageObserver.observe(img));
-}
-
-/* ------------------------------------------------
-   Journey Section Animations
-   ------------------------------------------------ */
-function initJourneySection() {
-    // Animate education cards
-    const educationGrid = document.querySelector('.journey__grid--education');
-    const educationCards = educationGrid ? educationGrid.querySelectorAll('.journey__card') : [];
-
-    // Animate experience timeline items
-    const experienceTimeline = document.querySelector('.experience-timeline');
-    const experienceItems = experienceTimeline ? experienceTimeline.querySelectorAll('.experience-timeline__item') : [];
-    const timelineLine = document.querySelector('.experience-timeline__line');
-
-    // Set initial state for education cards
-    educationCards.forEach((card) => {
-        gsap.set(card, {
-            opacity: 0,
-            y: 60,
-            scale: 0.9
-        });
-    });
-
-    // Animate education cards
-    educationCards.forEach((card, index) => {
-        gsap.to(card, {
-            scrollTrigger: {
-                trigger: '.journey__grid--education',
-                start: 'top 85%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            delay: index * 0.15,
-            ease: 'back.out(1.4)'
-        });
-    });
-
-    // Animate timeline line
-    if (timelineLine) {
-        gsap.set(timelineLine, { scaleX: 0, transformOrigin: 'left center' });
-
-        gsap.to(timelineLine, {
-            scrollTrigger: {
-                trigger: '.experience-timeline',
-                start: 'top 80%',
-                toggleActions: 'play none none none'
-            },
-            scaleX: 1,
-            duration: 1.2,
-            ease: 'power2.out'
-        });
-    }
-
-    // Set initial state for experience items
-    experienceItems.forEach((item) => {
-        const card = item.querySelector('.experience-timeline__card');
-        const dot = item.querySelector('.experience-timeline__dot');
-
-        gsap.set(card, {
-            opacity: 0,
-            y: 40,
-            scale: 0.9
-        });
-
-        gsap.set(dot, {
-            scale: 0
-        });
-    });
-
-    // Animate experience items with stagger
-    experienceItems.forEach((item, index) => {
-        const card = item.querySelector('.experience-timeline__card');
-        const dot = item.querySelector('.experience-timeline__dot');
-
-        // Animate dot first
-        gsap.to(dot, {
-            scrollTrigger: {
-                trigger: '.experience-timeline',
-                start: 'top 75%',
-                toggleActions: 'play none none none'
-            },
-            scale: 1,
-            duration: 0.4,
-            delay: 0.3 + index * 0.1,
-            ease: 'back.out(2)'
-        });
-
-        // Then animate card
-        gsap.to(card, {
-            scrollTrigger: {
-                trigger: '.experience-timeline',
-                start: 'top 75%',
-                toggleActions: 'play none none none'
-            },
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.5,
-            delay: 0.4 + index * 0.1,
-            ease: 'back.out(1.4)'
-        });
-    });
-
-    // Add hover interactions for education cards
-    educationCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-                y: -10,
-                scale: 1.02,
-                boxShadow: '0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 107, 107, 0.3)',
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-                y: 0,
-                scale: 1,
-                boxShadow: 'none',
-                duration: 0.4,
-                ease: 'power2.out'
-            });
-        });
-    });
-}
-
-/* ------------------------------------------------
-   Experience Modal
-   ------------------------------------------------ */
-function initExperienceModal() {
-    const modal = document.getElementById('experienceModal');
-    const modalBackdrop = modal?.querySelector('.experience-modal__backdrop');
-    const modalClose = modal?.querySelector('.experience-modal__close');
-    // Get both education cards and experience timeline items
-    const educationCards = document.querySelectorAll('.journey__card');
-    const experienceItems = document.querySelectorAll('.experience-timeline__item');
-    const allClickableItems = [...educationCards, ...experienceItems];
-
-    if (!modal || allClickableItems.length === 0) return;
-
-    // Experience data from CV
-    const experienceData = {
-        // Experience
-        1: {
-            date: 'Jan 2026 - May 2026',
-            title: 'Research Assistant',
-            company: 'SDAIA-KFUPM Joint Research Center for AI (JRCAI)',
-            description: `<p><strong>Project:</strong> Evaluating VLMs/LLMs Hallucination in Domain-Specific Tasks</p><p>Selected due to academic excellence. Designing controlled experiments to detect, categorize, and reduce hallucinations in Vision-Language Models for healthcare and education domains.</p><p><strong>Supervisor:</strong> Dr. Muzammil Behzad</p>`,
-            cardImage: 'assets/images/sdaia-jrcai.png',
-            modalImage: ''
-        },
-        2: {
-            date: 'Oct 2025 - Present',
-            title: 'SAP Generative AI Developer',
-            company: 'SAP | Dual Study Program | Saudi Arabia',
-            description: `<p>Part of SAP's prestigious Dual Study Program, working on Generative AI solutions for enterprise applications.</p><p>Earned <strong>SAP Certified Associate</strong> certification in Generative AI Development (2025), demonstrating expertise in building AI-powered business solutions.</p>`,
-            cardImage: 'https://cdn.prod.website-files.com/66c8945bfb638155af230df6/66d5e83a7965368cd3bef0d4_SAP.png',
-            modalImage: ''
-        },
-        3: {
-            date: 'Aug 2025 - Present',
-            title: 'Technical Lead Intern',
-            company: 'Arkan | Remote',
-            description: `<p>Worked on building a construction management SaaS platform.</p><p>Bridged business priorities with technical design, ensuring strategic alignment.</p><p>Advised leadership by combining technical expertise with understanding of business needs.</p>`,
-            cardImage: 'assets/images/arkan.png',
-            modalImage: ''
-        },
-        4: {
-            date: 'Jan 2026',
-            title: 'MENA ML Winter School 2026 Scholar',
-            company: 'King Abdullah University of Science and Technology (KAUST) | Thuwal, Saudi Arabia',
-            description: `<p>Selected among <strong>300 participants from 2,222 applicants</strong> (13.5% acceptance rate) for the prestigious ML school hosted by King Abdullah University of Science and Technology.</p><p>Featured lectures by <strong>Google DeepMind researchers</strong> covering cutting-edge machine learning topics.</p>`,
-            cardImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTte2-ZT_JSzcLjafdArm65XeFSrpA4sFkTdw&s',
-            modalImage: ''
-        },
-        5: {
-            date: 'Jun 2025 - Aug 2025',
-            title: 'AI Engineer Trainee',
-            company: 'Renad Al Majd Group | Riyadh, Saudi Arabia',
-            description: `<p>Developed Retrieval-Augmented Generation (RAG) systems using <strong>LangChain & n8n</strong> for enterprise knowledge management and automation solutions.</p><p>Gained hands-on experience building production-ready AI systems for real business applications.</p>`,
-            cardImage: 'https://www.rmg-sa.com/wp-content/uploads/2023/10/512.jpg',
-            modalImage: ''
-        },
-        6: {
-            date: 'Jun 2025 - Aug 2025',
-            title: 'Project Management Assistant',
-            company: 'Code Link | Riyadh, Saudi Arabia',
-            description: `<p>Coordinated project tasks, deliverables, and stakeholder communication.</p><p>Gained valuable experience in project coordination and cross-functional team collaboration.</p>`,
-            cardImage: 'assets/images/codelink.png',
-            modalImage: ''
-        },
-        7: {
-            date: 'Aug 2024 - Present',
-            title: 'Peer Tutor',
-            company: 'Assistant Deanship of Student Excellence and Success (SES) | KFUPM, Dhahran',
-            description: `<p>Delivered <strong>140+ tutoring hours</strong> across 5 courses:</p><ul><li>ICS 108 - Object-Oriented Programming</li><li>ICS 253 - Discrete Structures</li><li>MATH 106 - Applied Calculus</li><li>ISE 291 - Introduction to Data Science</li><li>COE 292 - Introduction to Artificial Intelligence</li></ul>`,
-            cardImage: 'assets/images/kfupm-ses.png',
-            modalImage: ''
-        },
-        8: {
-            date: 'Feb 2026 - Present',
-            title: 'Vice President',
-            company: 'Artificial Intelligence for All (AIFA) Club | KFUPM',
-            description: `<p>Leading initiatives to democratize AI education on campus as Vice President of the AI for All (AIFA) Club.</p><p>Organizing workshops, seminars, and hands-on sessions to help students explore and learn about artificial intelligence.</p>`,
-            cardImage: 'assets/images/aifa-club.png',
-            modalImage: ''
-        },
-        9: {
-            date: 'Mar 2025 - May 2025',
-            title: 'Part Time',
-            company: 'Net Zero | University Events',
-            description: `<p>Part-time role supporting university events and initiatives related to sustainability and Net Zero goals.</p><p>Gained experience in event coordination and stakeholder engagement within an academic setting.</p>`,
-            cardImage: 'assets/images/net-zero.png',
-            modalImage: ''
-        },
-        // Education
-        edu1: {
-            date: 'Aug 2022 - Present',
-            title: 'B.S. Software Engineering',
-            company: 'King Fahd University of Petroleum & Minerals (KFUPM)',
-            description: `<p><strong>GPA: 3.86/4.0</strong>, Dean's List</p><p>Pursuing a Bachelor's degree in Software Engineering at one of the top universities in the Middle East.</p><p><strong>Honors & Awards:</strong></p><ul><li>Physics 101 A+ Honor, SABIC Sponsored (Jun 2022)</li><li>Physics 102 A+ Honor, SABIC Sponsored (Jun 2022)</li></ul>`,
-            cardImage: 'https://argaamplus.s3.amazonaws.com/be72021d-9734-4f0f-bb5d-dd27b437b815.png',
-            modalImage: ''
-        },
-        edu2: {
-            date: 'Aug 2025 - Jan 2026',
-            title: 'Exchange Student - AI & Computer Science',
-            company: 'Nanyang Technological University (NTU), Singapore',
-            description: `<p><strong>First KFUPM student</strong> chosen to represent the university in Singapore at one of Asia's top universities.</p><p>Studied Machine Learning and Deep Learning courses, gaining international exposure and building a global network in the AI community.</p><p><strong>Projects completed:</strong></p><ul><li>LLM Human Preference Prediction (SC4000 Machine Learning)</li><li>Oxford Flowers Image Classification (SC4001 Deep Learning)</li></ul><p>GEM FAIR 2025 Letter of Participation</p>`,
-            cardImage: 'https://i0.wp.com/postgrad.com.sg/wp-content/uploads/2019/10/NTU-School-Cover-Image-01.png?resize=760%2C497&ssl=1',
-            modalImage: ''
-        },
-        edu3: {
-            date: 'Jan - Feb 2025',
-            title: 'AI Specialist Program',
-            company: 'King Abdullah University of Science and Technology (KAUST)',
-            description: `<p>Completed intensive AI specialist program at KAUST covering advanced topics in artificial intelligence.</p><p><strong>Topics Covered:</strong></p><ul><li>Intro to AI - Linear/Logistic Regression</li><li>Advanced AI - CNNs, Generative AI</li></ul><p>Gained hands-on experience with cutting-edge AI techniques from world-class researchers.</p>`,
-            cardImage: 'https://media.licdn.com/dms/image/v2/C5610AQFzWKdrzdRvPw/videocover-high/videocover-high/0/1702853309863/Kaust_Squaremp4?e=2147483647&v=beta&t=W7wZnYa2j-jU4-cgIMv47qmaLWfPtBc-_ppCWejUqjo',
-            modalImage: ''
-        }
-    };
-
-    // Open modal function
-    function openModal(experienceId) {
-        const data = experienceData[experienceId];
-        if (!data) return;
-
-        // Populate modal content
-        modal.querySelector('.experience-modal__date').textContent = data.date;
-        modal.querySelector('.experience-modal__title').textContent = data.title;
-        modal.querySelector('.experience-modal__company').textContent = data.company;
-        modal.querySelector('.experience-modal__description').innerHTML = data.description;
-
-        // Show modal with animation
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // GSAP animation for modal content
-        gsap.fromTo(modal.querySelector('.experience-modal__content'),
-            { scale: 0.9, y: 20, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.4)' }
-        );
-    }
-
-    // Close modal function
-    function closeModal() {
-        gsap.to(modal.querySelector('.experience-modal__content'), {
-            scale: 0.9,
-            y: 20,
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.in',
-            onComplete: () => {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-    }
-
-    // Event listeners for opening modal
-    allClickableItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const experienceId = item.dataset.experience;
-            openModal(experienceId);
-        });
-    });
-
-    // Event listeners for closing modal
-    modalClose?.addEventListener('click', closeModal);
-    modalBackdrop?.addEventListener('click', closeModal);
-
-    // Keyboard support - Escape to close
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-/* ------------------------------------------------
-   Project Modal
-   ------------------------------------------------ */
-function initProjectModal() {
-    const modal = document.getElementById('projectModal');
-    const modalBackdrop = modal?.querySelector('.project-modal__backdrop');
-    const modalClose = modal?.querySelector('.project-modal__close');
-    const projectCards = document.querySelectorAll('.project-row[data-project]');
-
-    if (!modal || projectCards.length === 0) return;
-
-    // Project data
-    const projectData = {
-        1: {
-            category: 'AI/ML',
-            title: 'Smart Sports Camera',
-            description: `<p>AI League Finalist project that earned recognition for innovation in sports technology.</p>
-            <p>Developed a YOLOv8-based smart camera system capable of tracking players in real-time and automatically generating sports highlight reels. The system uses computer vision to identify key moments in gameplay and creates compilation videos without manual intervention.</p>
-            <p><strong>Key Features:</strong></p>
-            <ul>
-                <li>Real-time player detection and tracking</li>
-                <li>Automated highlight generation</li>
-                <li>Multi-camera support</li>
-                <li>Performance analytics dashboard</li>
-            </ul>`,
-            tech: ['YOLOv8', 'Python', 'Computer Vision', 'OpenCV', 'PyTorch'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        },
-        2: {
-            category: 'AI/ML',
-            title: 'LLM Human Preference Prediction',
-            description: `<p>NTU Machine Learning course project (SC4000) focused on understanding and predicting human preferences for Large Language Model outputs.</p>
-            <p>Built a system that predicts which LLM-generated responses humans will prefer using knowledge distillation techniques from multiple state-of-the-art models including Gemma, LLaMA, and Qwen.</p>
-            <p><strong>Techniques Used:</strong></p>
-            <ul>
-                <li>Knowledge distillation from multiple LLMs</li>
-                <li>Preference learning and ranking</li>
-                <li>Transformer fine-tuning</li>
-                <li>Ensemble methods</li>
-            </ul>`,
-            tech: ['LLMs', 'NLP', 'PyTorch', 'Transformers', 'Knowledge Distillation'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        },
-        3: {
-            category: 'AI/ML',
-            title: 'Oxford Flowers Classification',
-            description: `<p>NTU Deep Learning course project (SC4001) implementing advanced image classification techniques on the Oxford Flowers 102 dataset.</p>
-            <p>Developed and optimized deep learning models for classifying 102 different flower species using PyTorch, achieving high accuracy through careful architecture selection and training strategies.</p>
-            <p><strong>Achievements:</strong></p>
-            <ul>
-                <li>Implemented multiple CNN architectures</li>
-                <li>Applied transfer learning from pretrained models</li>
-                <li>Data augmentation and regularization techniques</li>
-                <li>Hyperparameter optimization</li>
-            </ul>`,
-            tech: ['PyTorch', 'CNN', 'Deep Learning', 'Transfer Learning', 'Computer Vision'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        },
-        4: {
-            category: 'Web Development',
-            title: 'ReqFlow',
-            description: `<p>A lightweight, web-based requirements management system designed specifically for small teams and startups who need a simple yet effective way to track project requirements.</p>
-            <p>Features a clean, intuitive interface with role-based access control, requirement tracking, and team collaboration tools.</p>
-            <p><strong>Features:</strong></p>
-            <ul>
-                <li>Role-based access control</li>
-                <li>Requirement tracking and versioning</li>
-                <li>Team collaboration tools</li>
-                <li>Export to multiple formats</li>
-                <li>Responsive design</li>
-            </ul>`,
-            tech: ['HTML', 'CSS', 'JavaScript', 'Web Development', 'UI/UX'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        },
-        5: {
-            category: 'AI/ML',
-            title: 'RAG System Development',
-            description: `<p>Developed enterprise-grade Retrieval-Augmented Generation (RAG) systems during my time at Renad Al Majd Group.</p>
-            <p>Built knowledge management solutions using LangChain for orchestration and n8n for workflow automation, enabling organizations to leverage their internal documents with AI-powered search and question answering.</p>
-            <p><strong>Components:</strong></p>
-            <ul>
-                <li>Document ingestion and processing pipelines</li>
-                <li>Vector database integration</li>
-                <li>LLM-powered query understanding</li>
-                <li>Automated workflow triggers with n8n</li>
-            </ul>`,
-            tech: ['LangChain', 'RAG', 'n8n', 'Python', 'Vector Databases'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        },
-        6: {
-            category: 'Research',
-            title: 'VLM Hallucination Research',
-            description: `<p>Research project at SDAIA-KFUPM Joint Research Center for AI (JRCAI) focusing on evaluating and reducing hallucinations in Vision-Language Models.</p>
-            <p>Designing controlled experiments to detect, categorize, and mitigate hallucinations in VLMs when applied to domain-specific tasks in healthcare and education.</p>
-            <p><strong>Research Focus:</strong></p>
-            <ul>
-                <li>Hallucination detection methodologies</li>
-                <li>Domain-specific evaluation benchmarks</li>
-                <li>Mitigation strategies for VLMs</li>
-                <li>Healthcare and education applications</li>
-            </ul>
-            <p><strong>Supervisor:</strong> Dr. Muzammil Behzad</p>`,
-            tech: ['VLMs', 'Research', 'Healthcare AI', 'Python', 'Evaluation'],
-            github: 'https://github.com/1Baleid',
-            cardImage: '',
-            modalImage: ''
-        }
-    };
-
-    // Open modal function
-    function openModal(projectId) {
-        const data = projectData[projectId];
-        if (!data) return;
-
-        // Populate modal content
-        modal.querySelector('.project-modal__category').textContent = data.category;
-        modal.querySelector('.project-modal__title').textContent = data.title;
-        modal.querySelector('.project-modal__description').innerHTML = data.description;
-
-        // Populate tech tags
-        const techContainer = modal.querySelector('.project-modal__tech');
-        techContainer.innerHTML = data.tech.map(t => `<span>${t}</span>`).join('');
-
-        // Show modal
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // Close modal function
-    function closeModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Event listeners for opening modal
-    projectCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const projectId = card.dataset.project;
-            openModal(projectId);
-        });
-    });
-
-    // Event listeners for closing modal
-    modalClose?.addEventListener('click', closeModal);
-    modalBackdrop?.addEventListener('click', closeModal);
-
-    // Keyboard support - Escape to close
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-/* ------------------------------------------------
-   Card Images Initialization
-   Loads images from data objects into card containers
-   ------------------------------------------------ */
-function initCardImages() {
-    // Experience data for card images (same as in initExperienceModal)
-    const experienceCardImages = {
-        1: 'assets/images/sdaia-jrcai.png',
-        2: 'https://cdn.prod.website-files.com/66c8945bfb638155af230df6/66d5e83a7965368cd3bef0d4_SAP.png',
-        3: 'assets/images/arkan.png',
-        4: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTte2-ZT_JSzcLjafdArm65XeFSrpA4sFkTdw&s',
-        5: 'https://www.rmg-sa.com/wp-content/uploads/2023/10/512.jpg',
-        6: 'assets/images/codelink.png',
-        7: 'assets/images/kfupm-ses.png',
-        8: 'assets/images/aifa-club.png',
-        9: 'assets/images/net-zero.png',
-        edu1: 'https://argaamplus.s3.amazonaws.com/be72021d-9734-4f0f-bb5d-dd27b437b815.png',
-        edu2: 'https://i0.wp.com/postgrad.com.sg/wp-content/uploads/2019/10/NTU-School-Cover-Image-01.png?resize=760%2C497&ssl=1',
-        edu3: 'assets/images/Kaust_Squaremp4.jfif'
-    };
-
-    // Certification data for card images (same as in initCertificationModal)
-    const certificationCardImages = {
-        1: 'assets/images/SAP Certified SAP Generative AI Developer.jfif',
-        2: 'assets/images/KAUST AI Advanced.jfif',
-        3: 'assets/images/KAUST AI Intro .jfif',
-        4: 'assets/images/AI Leauge Certifcate of appreciation.jfif',
-        5: 'assets/images/IELTS.jfif',
-        6: 'assets/images/mckinsey-forward.png',
-        7: 'assets/images/a-phys101.jpg',
-        8: 'assets/images/a-phys102.jpg',
-        9: 'assets/images/gemfair.png',
-        10: 'assets/images/Alfozan.jfif',
-        11: 'assets/images/Mena ML Certificateof Participate.jfif',
-        12: 'assets/images/NON Academic Transcript.jfif'
-    };
-
-    // Load experience timeline card images
-    document.querySelectorAll('.experience-timeline__item[data-experience]').forEach(item => {
-        const id = item.dataset.experience;
-        const imagePath = experienceCardImages[id];
-        if (imagePath) {
-            const container = item.querySelector('.experience-timeline__card-image');
-            if (container) {
-                container.innerHTML = `<img src="${imagePath}" alt="Card image" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
-            }
-        }
-    });
-
-    // Load journey/education card images
-    document.querySelectorAll('.journey__card[data-experience]').forEach(card => {
-        const id = card.dataset.experience;
-        const imagePath = experienceCardImages[id];
-        if (imagePath) {
-            const container = card.querySelector('.journey__card-image');
-            if (container) {
-                container.innerHTML = `<img src="${imagePath}" alt="Card image" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
-            }
-        }
-    });
-
-    // Load certification card images
-    document.querySelectorAll('.certification-card[data-cert]').forEach(card => {
-        const id = card.dataset.cert;
-        const imagePath = certificationCardImages[id];
-        if (imagePath) {
-            // Check if image container exists, create if not
-            let container = card.querySelector('.certification-card__image');
-            if (!container) {
-                container = document.createElement('div');
-                container.className = 'certification-card__image';
-                card.insertBefore(container, card.firstChild);
-            }
-            container.innerHTML = `<img src="${imagePath}" alt="Card image" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
-        }
-    });
-}
-
-/* ------------------------------------------------
-   Certification Modal
-   ------------------------------------------------ */
-function initCertificationModal() {
-    const modal = document.getElementById('certificationModal');
-    const modalBackdrop = modal?.querySelector('.certification-modal__backdrop');
-    const modalClose = modal?.querySelector('.certification-modal__close');
-    const certCards = document.querySelectorAll('.certification-card[data-cert]');
-
-    if (!modal || certCards.length === 0) return;
-
-    // Certification data with images
-    const certificationData = {
-        1: {
-            date: 'Feb 2026',
-            title: 'SAP Certified Associate',
-            organization: 'SAP Generative AI Developer',
-            description: `<p>Official SAP certification demonstrating expertise in building generative AI solutions using SAP technologies.</p><p>Validates skills in developing AI-powered business applications and integrating generative AI capabilities into enterprise systems.</p>`,
-            cardImage: 'assets/images/SAP Certified SAP Generative AI Developer.jfif',
-            modalImage: ''
-        },
-        2: {
-            date: 'Feb 2025',
-            title: 'Advanced AI Course',
-            organization: 'KAUST',
-            description: `<p>Advanced AI certification covering Convolutional Neural Networks (CNNs) and Generative AI techniques.</p><p>Completed as part of the AI Specialist Program at King Abdullah University of Science and Technology.</p>`,
-            cardImage: 'assets/images/KAUST AI Advanced.jfif',
-            modalImage: ''
-        },
-        3: {
-            date: 'Jan 2025',
-            title: 'Intro to AI Course',
-            organization: 'KAUST',
-            description: `<p>Foundational AI certification covering Linear Regression and Logistic Regression.</p><p>Completed as part of the AI Specialist Program at King Abdullah University of Science and Technology.</p>`,
-            cardImage: 'assets/images/KAUST AI Intro .jfif',
-            modalImage: ''
-        },
-        4: {
-            date: 'May 2025',
-            title: 'Certificate of Appreciation',
-            organization: 'AI League Finals - Tuwaiq Academy',
-            description: `<p>Recognition for outstanding participation and achievement in the AI League Finals competition.</p><p>Developed a smart sports camera system using YOLOv8 for real-time player tracking and automated highlight generation.</p>`,
-            cardImage: 'assets/images/AI Leauge Certifcate of appreciation.jfif',
-            modalImage: ''
-        },
-        5: {
-            date: 'Nov 2024',
-            title: 'IELTS Band 6.5 (B2)',
-            organization: 'English Proficiency',
-            description: `<p>International English Language Testing System certification demonstrating B2 level English proficiency.</p><p>Score of 6.5 indicates upper-intermediate English skills for academic and professional contexts.</p>`,
-            cardImage: 'assets/images/IELTS.jfif',
-            modalImage: ''
-        },
-        6: {
-            date: 'Jul 2025',
-            title: 'McKinsey Forward Program',
-            organization: 'McKinsey & Company',
-            description: `<p>Completed the McKinsey Forward program, a prestigious learning experience focused on developing problem-solving, communication, and professional skills.</p><p>Gained frameworks and methodologies used by McKinsey consultants in tackling complex business challenges.</p>`,
-            cardImage: 'assets/images/mckinsey-forward.png',
-            modalImage: ''
-        },
-        7: {
-            date: 'Jun 2022',
-            title: 'Physics 101 A+ Honor',
-            organization: 'SABIC Sponsored - KFUPM Physics Department',
-            description: `<p>Academic excellence award for achieving A+ grade in Physics 101 course at KFUPM.</p><p>Sponsored by SABIC in recognition of outstanding academic performance in physics.</p>`,
-            cardImage: 'assets/images/a-phys101.jpg',
-            modalImage: ''
-        },
-        8: {
-            date: 'Jun 2022',
-            title: 'Physics 102 A+ Honor',
-            organization: 'SABIC Sponsored - KFUPM Physics Department',
-            description: `<p>Academic excellence award for achieving A+ grade in Physics 102 course at KFUPM.</p><p>Sponsored by SABIC in recognition of outstanding academic performance in physics.</p>`,
-            cardImage: 'assets/images/a-phys102.jpg',
-            modalImage: ''
-        },
-        9: {
-            date: '2025',
-            title: 'GEM FAIR 2025',
-            organization: 'Letter of Participation - NTU Singapore',
-            description: `<p>Letter of Participation from Nanyang Technological University for participating in the Global Exchange Module (GEM) Fair 2025.</p><p>Recognized as part of the exchange program experience in Singapore.</p>`,
-            cardImage: 'assets/images/gemfair.png',
-            modalImage: ''
-        },
-        10: {
-            date: 'Sep 2023',
-            title: 'Community Work Fundamentals',
-            organization: 'Al Fozan Academy + Aramco',
-            description: `<p>Certification in community work fundamentals jointly offered by Al Fozan Academy and Aramco.</p><p>Covered principles of community engagement, volunteer management, and social impact initiatives.</p>`,
-            cardImage: 'assets/images/Alfozan.jfif',
-            modalImage: ''
-        },
-        11: {
-            date: 'Jan 2026',
-            title: 'MENA Machine Learning Winter School 2026',
-            organization: 'King Abdullah University of Science and Technology (KAUST)',
-            description: `<p>Certificate of Participation for active participation and successful completion of the <strong>MENA Machine Learning Winter School 2026 (MenaML)</strong>.</p><p>Held at King Abdullah University of Science and Technology, Saudi Arabia, from <strong>24 - 29 January 2026</strong>.</p><p>Selected among <strong>300 participants from 2,222 applicants</strong> (13.5% acceptance rate) for this prestigious ML school.</p><p>Featured lectures by <strong>Google DeepMind researchers</strong> covering cutting-edge machine learning topics.</p><p><strong>Directors:</strong> Dr. Safa Messaoud, Maria Abi</p>`,
-            cardImage: 'assets/images/Mena ML Certificateof Participate.jfif',
-            modalImage: ''
-        },
-        12: {
-            date: '2025',
-            title: 'Non-Academic Transcript',
-            organization: 'KFUPM - Extracurricular Activities',
-            description: `<p>Official Non-Academic Transcript from King Fahd University of Petroleum and Minerals.</p><p>Documents participation in extracurricular activities, clubs, volunteer work, and other non-academic achievements during university studies.</p>`,
-            cardImage: 'assets/images/NON Academic Transcript.jfif',
-            modalImage: ''
-        }
-    };
-
-    // Open modal function
-    function openModal(certId, cardElement) {
-        const data = certificationData[certId];
-        if (!data) return;
-
-        // Populate modal content
-        modal.querySelector('.certification-modal__date').textContent = data.date;
-        modal.querySelector('.certification-modal__title').textContent = data.title;
-        modal.querySelector('.certification-modal__organization').textContent = data.organization;
-        modal.querySelector('.certification-modal__description').innerHTML = data.description;
-
-        // Handle image - get from card if available
-        const imageContainer = modal.querySelector('.certification-modal__image');
-        const cardImg = cardElement?.querySelector('img');
-
-        if (cardImg) {
-            // Use the image from the card
-            imageContainer.innerHTML = `<img src="${cardImg.src}" alt="${data.title}">`;
-        } else if (data.modalImage) {
-            imageContainer.innerHTML = `<img src="${data.modalImage}" alt="${data.title}">`;
-        } else {
-            imageContainer.innerHTML = '';
-        }
-
-        // Show modal with animation
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // Close modal function
-    function closeModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Event listeners for opening modal
-    certCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const certId = card.dataset.cert;
-            openModal(certId, card);
-        });
-    });
-
-    // Event listeners for closing modal
-    modalClose?.addEventListener('click', closeModal);
-    modalBackdrop?.addEventListener('click', closeModal);
-
-    // Keyboard support - Escape to close
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-// Initialize certification modal
-initCertificationModal();
-
-/* ------------------------------------------------
-   Scroll-triggered animations for footer
-   ------------------------------------------------ */
-gsap.from('.footer__brand', {
-    scrollTrigger: {
-        trigger: '.footer',
-        start: 'top 90%',
-        toggleActions: 'play none none none'
-    },
-    opacity: 0,
-    y: 30,
-    duration: 0.6,
-    ease: 'power2.out'
-});
-
-gsap.from('.footer__nav', {
-    scrollTrigger: {
-        trigger: '.footer',
-        start: 'top 90%',
-        toggleActions: 'play none none none'
-    },
-    opacity: 0,
-    y: 30,
-    duration: 0.6,
-    delay: 0.2,
-    ease: 'power2.out'
-});
-
-gsap.from('.footer__social', {
-    scrollTrigger: {
-        trigger: '.footer',
-        start: 'top 90%',
-        toggleActions: 'play none none none'
-    },
-    opacity: 0,
-    y: 30,
-    duration: 0.6,
-    delay: 0.4,
-    ease: 'power2.out'
-});
-
-/* ------------------------------------------------
-   IMAGE ATTACHMENT MODE (Development Only)
-   Set to false when all images are uploaded
-   ------------------------------------------------ */
-const DEV_MODE_IMAGE_ATTACH = false;
-
-if (DEV_MODE_IMAGE_ATTACH) {
-    initImageAttachmentMode();
-}
-
-function initImageAttachmentMode() {
-    // Create styles for attachment buttons
-    const style = document.createElement('style');
-    style.textContent = `
-        .attach-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.9);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .attach-btn:hover {
-            background: rgba(59, 130, 246, 1);
-            transform: scale(1.1);
-        }
-        .attach-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: white;
-        }
-        .attach-btn--modal {
-            top: 12px;
-            right: 12px;
-            width: 40px;
-            height: 40px;
-        }
-        .attach-btn--modal svg {
-            width: 20px;
-            height: 20px;
-        }
-        .experience-timeline__card-image,
-        .journey__card-image,
-        .project-row__image,
-        .certification-card {
-            position: relative;
-        }
-        .experience-modal__image,
-        .project-modal__image,
-        .certification-modal__image {
-            position: relative;
-        }
-        .attach-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-        .attach-dialog {
-            background: #1a1a2e;
-            border-radius: 16px;
-            padding: 32px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .attach-dialog__title {
-            color: white;
-            font-size: 1.25rem;
-            margin-bottom: 8px;
-        }
-        .attach-dialog__subtitle {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.875rem;
-            margin-bottom: 24px;
-        }
-        .attach-dialog__input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: white;
-            font-size: 1rem;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
-        .attach-dialog__input:focus {
-            outline: none;
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-        .attach-dialog__btns {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-        .attach-dialog__btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .attach-dialog__btn--cancel {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-        .attach-dialog__btn--cancel:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        .attach-dialog__btn--save {
-            background: rgba(59, 130, 246, 1);
-            color: white;
-        }
-        .attach-dialog__btn--save:hover {
-            background: rgba(59, 130, 246, 0.8);
-        }
-        .attach-dialog__preview {
-            margin-bottom: 16px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.05);
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .attach-dialog__preview img {
-            max-width: 100%;
-            max-height: 200px;
-            object-fit: contain;
-        }
-        .attach-dialog__preview-placeholder {
-            color: rgba(255,255,255,0.3);
-            font-size: 0.875rem;
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Create attach button SVG
-    const attachSvg = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;
-
-    // Add attach buttons to experience timeline cards
-    document.querySelectorAll('.experience-timeline__card-image').forEach(container => {
-        const item = container.closest('.experience-timeline__item');
-        if (item) {
-            const btn = createAttachButton();
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showAttachDialog('experience', item.dataset.experience, 'card');
-            });
-            container.appendChild(btn);
-        }
-    });
-
-    // Add attach buttons to journey/education cards
-    document.querySelectorAll('.journey__card-image').forEach(container => {
-        const item = container.closest('.journey__card');
-        if (item) {
-            const btn = createAttachButton();
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showAttachDialog('experience', item.dataset.experience, 'card');
-            });
-            container.appendChild(btn);
-        }
-    });
-
-    // Add attach buttons to project cards
-    document.querySelectorAll('.project-row__image').forEach(container => {
-        const item = container.closest('.project-row');
-        if (item) {
-            const btn = createAttachButton();
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showAttachDialog('project', item.dataset.project, 'card');
-            });
-            container.appendChild(btn);
-        }
-    });
-
-    // Add attach buttons to certification cards (they don't have image containers, so add to card)
-    document.querySelectorAll('.certification-card').forEach(card => {
-        const btn = createAttachButton();
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            showAttachDialog('certification', card.dataset.cert, 'card');
-        });
-        card.appendChild(btn);
-    });
-
-    // Add attach button to experience modal
-    const expModal = document.querySelector('.experience-modal__image');
-    if (expModal) {
-        const btn = createAttachButton(true);
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const activeId = getCurrentExperienceId();
-            if (activeId) showAttachDialog('experience', activeId, 'modal');
-        });
-        expModal.appendChild(btn);
-    }
-
-    // Add attach button to project modal
-    const projModal = document.querySelector('.project-modal__image');
-    if (projModal) {
-        const btn = createAttachButton(true);
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const activeId = getCurrentProjectId();
-            if (activeId) showAttachDialog('project', activeId, 'modal');
-        });
-        projModal.appendChild(btn);
-    }
-
-    // Add attach button to certification modal
-    const certModal = document.querySelector('.certification-modal__image');
-    if (certModal) {
-        const btn = createAttachButton(true);
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const activeId = getCurrentCertId();
-            if (activeId) showAttachDialog('certification', activeId, 'modal');
-        });
-        certModal.appendChild(btn);
-    }
-
-    function createAttachButton(isModal = false) {
-        const btn = document.createElement('button');
-        btn.className = 'attach-btn' + (isModal ? ' attach-btn--modal' : '');
-        btn.innerHTML = attachSvg;
-        btn.title = 'Attach image';
-        return btn;
-    }
-
-    function getCurrentExperienceId() {
-        const modal = document.getElementById('experienceModal');
-        if (!modal?.classList.contains('active')) return null;
-        // Find which item triggered the modal by checking the title
-        const title = modal.querySelector('.experience-modal__title')?.textContent;
-        const items = [...document.querySelectorAll('.experience-timeline__item'), ...document.querySelectorAll('.journey__card')];
-        for (const item of items) {
-            const itemTitle = item.querySelector('.experience-timeline__title, .journey__card-title')?.textContent;
-            if (itemTitle && title?.includes(itemTitle.trim())) {
-                return item.dataset.experience;
-            }
-        }
-        return null;
-    }
-
-    function getCurrentProjectId() {
-        const modal = document.getElementById('projectModal');
-        if (!modal?.classList.contains('active')) return null;
-        const title = modal.querySelector('.project-modal__title')?.textContent;
-        const cards = document.querySelectorAll('.project-row[data-project]');
-        for (const card of cards) {
-            const cardTitle = card.querySelector('.project-row__title')?.textContent;
-            if (cardTitle && title?.includes(cardTitle.trim())) {
-                return card.dataset.project;
-            }
-        }
-        return null;
-    }
-
-    function getCurrentCertId() {
-        const modal = document.getElementById('certificationModal');
-        if (!modal?.classList.contains('active')) return null;
-        const title = modal.querySelector('.certification-modal__title')?.textContent;
-        const cards = document.querySelectorAll('.certification-card[data-cert]');
-        for (const card of cards) {
-            const cardTitle = card.querySelector('.certification-card__title')?.textContent;
-            if (cardTitle && title?.includes(cardTitle.trim())) {
-                return card.dataset.cert;
-            }
-        }
-        return null;
-    }
-
-    // Watch for modals opening and apply saved modal images
-    function setupModalObservers() {
-        const modals = [
-            { el: document.getElementById('experienceModal'), type: 'experience', getIdFn: getCurrentExperienceId },
-            { el: document.getElementById('projectModal'), type: 'project', getIdFn: getCurrentProjectId },
-            { el: document.getElementById('certificationModal'), type: 'certification', getIdFn: getCurrentCertId }
+    /* ------------------------------------------------------------------
+       GitHub repositories (curated, with live metadata and offline fallback)
+       ------------------------------------------------------------------ */
+    function initRepos() {
+        var grid = document.getElementById('repoGrid');
+        if (!grid) return;
+        grid.setAttribute('aria-busy', 'true');
+
+        var USER = '1Baleid';
+        var CACHE_KEY = 'gh-repos-v3';
+        var CACHE_MS = 30 * 60 * 1000;
+
+        // Curated selection, in display order. Live GitHub data (stars, last push,
+        // and the repo's own description when it has one) is merged in; curated
+        // languages win because GitHub's byte-count guess mislabels some repos.
+        var FEATURED = [
+            { name: 'ReqFlow-Frontend', language: 'JavaScript',
+              description: 'React front end for ReqFlow: create, refine, review, approve and track software requirements with role-based workflows.' },
+            { name: 'calibrated-location-tensors', language: 'Python',
+              description: 'Research code for multi-camera pedestrian trajectory forecasting on the WNMF dataset: diagnoses and repairs a published LSTM encoder–decoder that forecasts camera ID and bounding box over 12 future steps.' },
+            { name: 'ClutchTimes-SCAI', language: 'Jupyter Notebook',
+              description: 'My AI League finalist project: YOLOv8 ball tracking, camera control from object coordinates, and face recognition for automated soccer broadcasts.' },
+            { name: 'tuwaiq-agent-workshop', language: 'Python',
+              description: 'Starter code for a 5-session Tuwaiq Club workshop: build an agent that answers from documents, cites sources, calls tools and says “I don’t know”. Plain Python, no frameworks.' },
+            { name: '202245500-AbdullahBaleid-assignment4', language: 'HTML', label: 'This website',
+              description: 'Source of this portfolio: semantic HTML, hand-written CSS and a small vanilla JS layer, deployed on Vercel.' }
         ];
+        FEATURED.forEach(function (r) { r.html_url = 'https://github.com/' + USER + '/' + r.name; });
 
-        modals.forEach(({ el, type, getIdFn }) => {
-            if (!el) return;
-
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.attributeName === 'class' && el.classList.contains('active')) {
-                        // Modal just opened, check for saved image
-                        setTimeout(() => {
-                            const id = getIdFn();
-                            if (id) {
-                                const savedPath = getSavedModalImage(type, id);
-                                if (savedPath) {
-                                    updateModalImage(type, savedPath);
-                                }
-                            }
-                        }, 50);
-                    }
-                });
-            });
-
-            observer.observe(el, { attributes: true, attributeFilter: ['class'] });
-        });
-    }
-
-    // Initialize modal observers
-    setupModalObservers();
-
-    function showAttachDialog(type, id, target) {
-        const overlay = document.createElement('div');
-        overlay.className = 'attach-overlay';
-
-        const dialog = document.createElement('div');
-        dialog.className = 'attach-dialog';
-        dialog.innerHTML = `
-            <h3 class="attach-dialog__title">Attach Image</h3>
-            <p class="attach-dialog__subtitle">${type.charAt(0).toUpperCase() + type.slice(1)} #${id} - ${target === 'card' ? 'Card Image' : 'Modal Image'}</p>
-            <div class="attach-dialog__preview">
-                <span class="attach-dialog__preview-placeholder">Image preview will appear here</span>
-            </div>
-            <input type="text" class="attach-dialog__input" placeholder="Enter image path (e.g., images/photo.jpg or https://...)" />
-            <div class="attach-dialog__btns">
-                <button class="attach-dialog__btn attach-dialog__btn--cancel">Cancel</button>
-                <button class="attach-dialog__btn attach-dialog__btn--save">Save</button>
-            </div>
-        `;
-
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-
-        const input = dialog.querySelector('.attach-dialog__input');
-        const preview = dialog.querySelector('.attach-dialog__preview');
-        const cancelBtn = dialog.querySelector('.attach-dialog__btn--cancel');
-        const saveBtn = dialog.querySelector('.attach-dialog__btn--save');
-
-        // Preview image on input
-        input.addEventListener('input', () => {
-            const path = input.value.trim();
-            if (path) {
-                preview.innerHTML = `<img src="${path}" alt="Preview" onerror="this.parentElement.innerHTML='<span class=\\'attach-dialog__preview-placeholder\\'>Invalid image path</span>'" />`;
-            } else {
-                preview.innerHTML = `<span class="attach-dialog__preview-placeholder">Image preview will appear here</span>`;
-            }
-        });
-
-        // Cancel
-        cancelBtn.addEventListener('click', () => {
-            overlay.remove();
-        });
-
-        // Close on overlay click
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) overlay.remove();
-        });
-
-        // Save
-        saveBtn.addEventListener('click', () => {
-            const path = input.value.trim();
-            if (path) {
-                saveImagePath(type, id, target, path);
-                overlay.remove();
-            }
-        });
-
-        // Focus input
-        setTimeout(() => input.focus(), 100);
-    }
-
-    // Storage key for persisting images
-    const STORAGE_KEY = 'dev_attached_images';
-
-    // Load saved images from localStorage
-    function loadSavedImages() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) return;
-
-        try {
-            const images = JSON.parse(saved);
-            Object.entries(images).forEach(([key, path]) => {
-                const [type, id, target] = key.split('_');
-                if (target === 'card') {
-                    updateCardImage(type, id, path);
-                }
-                // Modal images are loaded when modal opens
-            });
-            console.log('%c Loaded saved images from localStorage ', 'background: #8b5cf6; color: white; padding: 4px 8px; border-radius: 4px;');
-        } catch (e) {
-            console.error('Error loading saved images:', e);
-        }
-    }
-
-    // Get saved modal image for a specific item
-    function getSavedModalImage(type, id) {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) return null;
-        try {
-            const images = JSON.parse(saved);
-            return images[`${type}_${id}_modal`] || null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    function saveImagePath(type, id, target, path) {
-        const imageKey = target === 'card' ? 'cardImage' : 'modalImage';
-
-        // Save to localStorage for persistence
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        saved[`${type}_${id}_${target}`] = path;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-
-        // Log the update for easy copy-paste
-        console.log(`%c IMAGE PATH UPDATE `, 'background: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px;');
-        console.log(`Type: ${type}, ID: ${id}, Target: ${target}`);
-        console.log(`Path: "${path}"`);
-        console.log(`Update the data object: ${type}Data[${id}].${imageKey} = '${path}'`);
-
-        // Update the card image display
-        if (target === 'card') {
-            updateCardImage(type, id, path);
-        } else {
-            updateModalImage(type, path);
-        }
-    }
-
-    // Export all saved images (call this in console when done)
-    window.exportSavedImages = function() {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        console.log('%c ALL SAVED IMAGE PATHS ', 'background: #10b981; color: white; padding: 4px 8px; border-radius: 4px;');
-        console.log('Copy these into your data objects:\n');
-
-        const byType = { experience: {}, project: {}, certification: {} };
-        Object.entries(saved).forEach(([key, path]) => {
-            const [type, id, target] = key.split('_');
-            if (!byType[type][id]) byType[type][id] = {};
-            byType[type][id][target === 'card' ? 'cardImage' : 'modalImage'] = path;
-        });
-
-        Object.entries(byType).forEach(([type, items]) => {
-            if (Object.keys(items).length > 0) {
-                console.log(`\n// ${type}Data updates:`);
-                Object.entries(items).forEach(([id, images]) => {
-                    Object.entries(images).forEach(([key, path]) => {
-                        console.log(`${type}Data['${id}'].${key} = '${path}';`);
-                    });
-                });
-            }
-        });
-
-        return saved;
-    };
-
-    // Clear all saved images
-    window.clearSavedImages = function() {
-        localStorage.removeItem(STORAGE_KEY);
-        console.log('%c Cleared all saved images ', 'background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px;');
-        console.log('Refresh the page to see the changes.');
-    };
-
-    function updateCardImage(type, id, path) {
-        let container;
-
-        if (type === 'experience') {
-            const item = document.querySelector(`.experience-timeline__item[data-experience="${id}"]`) ||
-                        document.querySelector(`.journey__card[data-experience="${id}"]`);
-            container = item?.querySelector('.experience-timeline__card-image, .journey__card-image');
-        } else if (type === 'project') {
-            const item = document.querySelector(`.project-row[data-project="${id}"]`);
-            container = item?.querySelector('.project-row__image');
-        } else if (type === 'certification') {
-            // Certifications don't have card images currently, but we can add one
-            const card = document.querySelector(`.certification-card[data-cert="${id}"]`);
-            if (card) {
-                let imgContainer = card.querySelector('.certification-card__image');
-                if (!imgContainer) {
-                    imgContainer = document.createElement('div');
-                    imgContainer.className = 'certification-card__image';
-                    card.insertBefore(imgContainer, card.firstChild);
-                }
-                container = imgContainer;
-            }
-        }
-
-        if (container) {
-            // Keep the attach button
-            const attachBtn = container.querySelector('.attach-btn');
-            container.innerHTML = `<img src="${path}" alt="Card image" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
-            if (attachBtn) container.appendChild(attachBtn);
-        }
-    }
-
-    function updateModalImage(type, path) {
-        let container;
-
-        if (type === 'experience') {
-            container = document.querySelector('.experience-modal__image');
-        } else if (type === 'project') {
-            container = document.querySelector('.project-modal__image');
-        } else if (type === 'certification') {
-            container = document.querySelector('.certification-modal__image');
-        }
-
-        if (container) {
-            // Keep the attach button
-            const attachBtn = container.querySelector('.attach-btn');
-            container.innerHTML = `<img src="${path}" alt="Modal image" style="width:100%;height:100%;object-fit:contain;">`;
-            if (attachBtn) container.appendChild(attachBtn);
-        }
-    }
-
-    // Load saved images on init
-    loadSavedImages();
-
-    console.log('%c DEV MODE: Image Attachment Enabled ', 'background: #10b981; color: white; padding: 4px 8px; border-radius: 4px;');
-    console.log('Click the blue + buttons on cards and modals to attach images.');
-    console.log('Images are now saved to localStorage and persist across refreshes!');
-    console.log('');
-    console.log('%c Commands: ', 'background: #6366f1; color: white; padding: 4px 8px; border-radius: 4px;');
-    console.log('  exportSavedImages() - Export all paths to copy into code');
-    console.log('  clearSavedImages()  - Clear all saved images');
-    console.log('');
-    console.log('When done, set DEV_MODE_IMAGE_ATTACH to false in main.js');
-}
-
-/* ================================================
-   ASSIGNMENT 3: NEW FEATURES
-   ================================================ */
-
-/* ------------------------------------------------
-   Project Sorting (Complex Logic)
-   ------------------------------------------------ */
-function initProjectSort() {
-    const sortSelect = document.getElementById('sortSelect');
-    const projectsList = document.querySelector('.projects__list');
-
-    if (!sortSelect || !projectsList) return;
-
-    // Store original order
-    const originalOrder = Array.from(projectsList.querySelectorAll('.project-row'));
-
-    sortSelect.addEventListener('change', () => {
-        const sortValue = sortSelect.value;
-        const projects = Array.from(projectsList.querySelectorAll('.project-row'));
-
-        let sortedProjects;
-
-        switch (sortValue) {
-            case 'name-asc':
-                sortedProjects = projects.sort((a, b) => {
-                    const nameA = a.querySelector('.project-row__title').textContent.toLowerCase();
-                    const nameB = b.querySelector('.project-row__title').textContent.toLowerCase();
-                    return nameA.localeCompare(nameB);
-                });
-                break;
-            case 'name-desc':
-                sortedProjects = projects.sort((a, b) => {
-                    const nameA = a.querySelector('.project-row__title').textContent.toLowerCase();
-                    const nameB = b.querySelector('.project-row__title').textContent.toLowerCase();
-                    return nameB.localeCompare(nameA);
-                });
-                break;
-            case 'category':
-                sortedProjects = projects.sort((a, b) => {
-                    const catA = a.querySelector('.project-row__category').textContent.toLowerCase();
-                    const catB = b.querySelector('.project-row__category').textContent.toLowerCase();
-                    return catA.localeCompare(catB);
-                });
-                break;
-            default:
-                sortedProjects = originalOrder;
-        }
-
-        // Animate and reorder
-        gsap.to(projects, {
-            opacity: 0,
-            y: -10,
-            duration: 0.2,
-            stagger: 0.03,
-            onComplete: () => {
-                sortedProjects.forEach(project => {
-                    projectsList.appendChild(project);
-                });
-                gsap.to(sortedProjects, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.3,
-                    stagger: 0.05
-                });
-            }
-        });
-    });
-}
-
-/* ------------------------------------------------
-   GitHub API Integration
-   ------------------------------------------------ */
-function initGitHubRepos() {
-    const grid = document.getElementById('githubGrid');
-    const loading = document.getElementById('githubLoading');
-    const error = document.getElementById('githubError');
-    const retryBtn = document.getElementById('retryGithub');
-
-    if (!grid) return;
-
-    const GITHUB_USERNAME = '1Baleid';
-    const REPOS_TO_SHOW = 6;
-
-    async function fetchRepos() {
-        loading.style.display = 'flex';
-        error.style.display = 'none';
-        grid.innerHTML = '';
-
-        try {
-            const response = await fetch(
-                `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=${REPOS_TO_SHOW}`
-            );
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch repositories');
-            }
-
-            const repos = await response.json();
-
-            loading.style.display = 'none';
-
-            if (repos.length === 0) {
-                grid.innerHTML = '<p class="github-repos__empty">No public repositories found.</p>';
-                return;
-            }
-
-            repos.forEach(repo => {
-                const card = createRepoCard(repo);
-                grid.appendChild(card);
-            });
-
-            // Animate cards in
-            gsap.fromTo(grid.children,
-                {
-                    opacity: 0,
-                    y: 30
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    stagger: 0.1,
-                    ease: 'power2.out',
-                    clearProps: 'all'
-                }
-            );
-
-        } catch (err) {
-            console.error('GitHub API Error:', err);
-            loading.style.display = 'none';
-            error.style.display = 'flex';
-        }
-    }
-
-    function createRepoCard(repo) {
-        const card = document.createElement('article');
-        card.className = 'repo-card';
-
-        const languageColor = getLanguageColor(repo.language);
-
-        card.innerHTML = `
-            <div class="repo-card__header">
-                <h3 class="repo-card__name">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                    </svg>
-                    ${repo.name}
-                </h3>
-                <span class="repo-card__visibility">${repo.private ? 'Private' : 'Public'}</span>
-            </div>
-            <p class="repo-card__description">${repo.description || 'No description available.'}</p>
-            <div class="repo-card__meta">
-                ${repo.language ? `
-                    <span class="repo-card__meta-item">
-                        <span class="repo-card__language-dot" style="background: ${languageColor}"></span>
-                        ${repo.language}
-                    </span>
-                ` : ''}
-                <span class="repo-card__meta-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    ${repo.stargazers_count}
-                </span>
-                <span class="repo-card__meta-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
-                        <path d="M2 12H22"/>
-                        <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"/>
-                    </svg>
-                    ${repo.forks_count}
-                </span>
-            </div>
-            <a href="${repo.html_url}" target="_blank" rel="noopener" class="repo-card__link">
-                View Repository
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                </svg>
-            </a>
-        `;
-
-        return card;
-    }
-
-    function getLanguageColor(language) {
-        const colors = {
-            'JavaScript': '#f1e05a',
-            'TypeScript': '#3178c6',
-            'Python': '#3572A5',
-            'HTML': '#e34c26',
-            'CSS': '#563d7c',
-            'Java': '#b07219',
-            'C++': '#f34b7d',
-            'C': '#555555',
-            'Go': '#00ADD8',
-            'Rust': '#dea584',
-            'Ruby': '#701516',
-            'PHP': '#4F5D95',
-            'Swift': '#ffac45',
-            'Kotlin': '#A97BFF',
-            'Jupyter Notebook': '#DA5B0B'
+        var LANG_COLORS = {
+            'JavaScript': '#f1e05a', 'TypeScript': '#3178c6', 'Python': '#3572A5', 'HTML': '#e34c26',
+            'CSS': '#663399', 'Java': '#b07219', 'C++': '#f34b7d', 'C': '#555555', 'Go': '#00ADD8',
+            'Jupyter Notebook': '#DA5B0B', 'Shell': '#89e051', 'Dart': '#00B4AB', 'Kotlin': '#A97BFF'
         };
-        return colors[language] || '#8b949e';
-    }
 
-    // Initial fetch
-    fetchRepos();
-
-    // Retry button
-    if (retryBtn) {
-        retryBtn.addEventListener('click', fetchRepos);
-    }
-}
-
-/* ------------------------------------------------
-   Session Timer (State Management)
-   ------------------------------------------------ */
-function initSessionTimer() {
-    const sessionTimeEl = document.getElementById('sessionTime');
-    if (!sessionTimeEl) return;
-
-    // Get or set session start time
-    let sessionStart = sessionStorage.getItem('sessionStart');
-    if (!sessionStart) {
-        sessionStart = Date.now();
-        sessionStorage.setItem('sessionStart', sessionStart);
-    } else {
-        sessionStart = parseInt(sessionStart);
-    }
-
-    function updateTimer() {
-        const elapsed = Date.now() - sessionStart;
-        const minutes = Math.floor(elapsed / 60000);
-        const seconds = Math.floor((elapsed % 60000) / 1000);
-
-        sessionTimeEl.textContent =
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    // Update immediately and every second
-    updateTimer();
-    setInterval(updateTimer, 1000);
-
-    // Track total visits
-    let visitCount = localStorage.getItem('visitCount');
-    visitCount = visitCount ? parseInt(visitCount) + 1 : 1;
-    localStorage.setItem('visitCount', visitCount);
-
-    console.log(`Welcome! This is visit #${visitCount}`);
-}
-
-/* ------------------------------------------------
-   User Session / Login Simulation (State Management)
-   ------------------------------------------------ */
-function initUserSession() {
-    const loginBtn = document.getElementById('loginBtn');
-    const userInfo = document.getElementById('userInfo');
-    const userAvatar = document.getElementById('userAvatar');
-    const userName = document.getElementById('userName');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginModal = document.getElementById('loginModal');
-    const loginModalClose = document.getElementById('loginModalClose');
-    const loginForm = document.getElementById('loginForm');
-    const guestNameInput = document.getElementById('guestName');
-
-    if (!loginBtn || !loginModal) return;
-
-    // Check if user is already logged in
-    const savedUser = localStorage.getItem('guestUser');
-    if (savedUser) {
-        showLoggedInState(savedUser);
-    }
-
-    // Open login modal
-    loginBtn.addEventListener('click', () => {
-        loginModal.classList.add('active');
-        setTimeout(() => guestNameInput.focus(), 100);
-    });
-
-    // Close login modal
-    loginModalClose.addEventListener('click', closeModal);
-    loginModal.querySelector('.login-modal__backdrop').addEventListener('click', closeModal);
-
-    function closeModal() {
-        loginModal.classList.remove('active');
-    }
-
-    // Handle login form submit
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = guestNameInput.value.trim();
-
-        if (name.length >= 2) {
-            localStorage.setItem('guestUser', name);
-            showLoggedInState(name);
-            closeModal();
-            guestNameInput.value = '';
-
-            // Show welcome message
-            showNotification(`Welcome, ${name}!`);
-        }
-    });
-
-    // Handle logout
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('guestUser');
-        showLoggedOutState();
-        showNotification('You have been logged out.');
-    });
-
-    function showLoggedInState(name) {
-        loginBtn.style.display = 'none';
-        userInfo.style.display = 'flex';
-        userAvatar.textContent = name.charAt(0).toUpperCase();
-        userName.textContent = name;
-    }
-
-    function showLoggedOutState() {
-        loginBtn.style.display = 'flex';
-        userInfo.style.display = 'none';
-    }
-
-    function showNotification(message) {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-            <span>${message}</span>
-        `;
-
-        // Add styles
-        notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 24px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 14px;
-            z-index: 9999;
-            box-shadow: 0 10px 40px rgba(255, 107, 107, 0.2);
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        `;
-
-        notification.querySelector('svg').style.color = 'var(--accent)';
-
-        document.body.appendChild(notification);
-
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 10);
-
-        // Remove after delay
-        setTimeout(() => {
-            notification.style.transform = 'translateX(120%)';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-}
-
-/* ------------------------------------------------
-   Assignment 4: Particle Trail Cursor
-   ------------------------------------------------ */
-function initParticleTrail() {
-    // Skip on touch devices
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
-
-    const particles = [];
-    const particleCount = 15;
-    const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181'];
-
-    // Create particle elements
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'cursor-particle';
-        particle.style.cssText = `
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: ${colors[i % colors.length]};
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            box-shadow: 0 0 10px ${colors[i % colors.length]};
-        `;
-        document.body.appendChild(particle);
-        particles.push({
-            element: particle,
-            x: 0,
-            y: 0,
-            targetX: 0,
-            targetY: 0,
-            delay: i * 2
-        });
-    }
-
-    let mouseX = 0;
-    let mouseY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-
-        particles.forEach(p => {
-            p.element.style.opacity = '0.8';
-        });
-    });
-
-    document.addEventListener('mouseleave', () => {
-        particles.forEach(p => {
-            p.element.style.opacity = '0';
-        });
-    });
-
-    // Animation loop
-    function animate() {
-        particles.forEach((particle, index) => {
-            const speed = 0.15 - (index * 0.008);
-            particle.x += (mouseX - particle.x) * speed;
-            particle.y += (mouseY - particle.y) * speed;
-
-            const scale = 1 - (index * 0.05);
-            particle.element.style.transform = `translate(${particle.x - 4}px, ${particle.y - 4}px) scale(${scale})`;
-        });
-
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-}
-
-/* ------------------------------------------------
-   Assignment 4: Confetti Effect
-   ------------------------------------------------ */
-function initConfetti() {
-    // Store reference to trigger confetti globally
-    window.triggerConfetti = function() {
-        const confettiCount = 150;
-        const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#a8e6cf', '#dfe6e9'];
-
-        for (let i = 0; i < confettiCount; i++) {
-            createConfettiPiece(colors[Math.floor(Math.random() * colors.length)]);
-        }
-    };
-
-    function createConfettiPiece(color) {
-        const confetti = document.createElement('div');
-        const size = Math.random() * 10 + 5;
-        const startX = Math.random() * window.innerWidth;
-
-        confetti.style.cssText = `
-            position: fixed;
-            width: ${size}px;
-            height: ${size}px;
-            background: ${color};
-            top: -20px;
-            left: ${startX}px;
-            z-index: 99999;
-            pointer-events: none;
-            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-        `;
-
-        document.body.appendChild(confetti);
-
-        const duration = Math.random() * 2 + 2;
-        const rotation = Math.random() * 720 - 360;
-        const drift = Math.random() * 200 - 100;
-
-        gsap.to(confetti, {
-            y: window.innerHeight + 50,
-            x: `+=${drift}`,
-            rotation: rotation,
-            duration: duration,
-            ease: 'power1.out',
-            onComplete: () => confetti.remove()
-        });
-
-        gsap.to(confetti, {
-            opacity: 0,
-            duration: duration * 0.3,
-            delay: duration * 0.7
-        });
-    }
-}
-
-/* ------------------------------------------------
-   Assignment 4: Konami Code Easter Egg
-   ------------------------------------------------ */
-function initKonamiCode() {
-    const konamiCode = [
-        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-        'KeyB', 'KeyA'
-    ];
-    let konamiIndex = 0;
-
-    document.addEventListener('keydown', (e) => {
-        if (e.code === konamiCode[konamiIndex]) {
-            konamiIndex++;
-
-            if (konamiIndex === konamiCode.length) {
-                activateEasterEgg();
-                konamiIndex = 0;
-            }
-        } else {
-            konamiIndex = 0;
-        }
-    });
-
-    function activateEasterEgg() {
-        // Trigger confetti
-        if (window.triggerConfetti) {
-            window.triggerConfetti();
-        }
-
-        // Create matrix rain effect
-        const canvas = document.createElement('canvas');
-        canvas.id = 'matrix-canvas';
-        canvas.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 99998;
-            pointer-events: none;
-            opacity: 0.8;
-        `;
-        document.body.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const chars = 'ABDULLAHBALEIDPORTFOLIO01';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#ff6b6b';
-            ctx.font = `${fontSize}px monospace`;
-
-            for (let i = 0; i < drops.length; i++) {
-                const char = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        const matrixInterval = setInterval(drawMatrix, 35);
-
-        // Show notification
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-            <div style="text-align: center;">
-                <div style="font-size: 24px; margin-bottom: 10px;">You found the secret!</div>
-                <div style="font-size: 14px; opacity: 0.8;">Konami Code Activated</div>
-            </div>
-        `;
-        notification.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 30px 50px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ff6b6b;
-            border-radius: 20px;
-            color: white;
-            z-index: 99999;
-            box-shadow: 0 0 50px rgba(255, 107, 107, 0.5);
-        `;
-        document.body.appendChild(notification);
-
-        // Remove after 5 seconds
-        setTimeout(() => {
-            clearInterval(matrixInterval);
-            gsap.to(canvas, {
-                opacity: 0,
-                duration: 1,
-                onComplete: () => canvas.remove()
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
             });
-            gsap.to(notification, {
-                opacity: 0,
-                scale: 0.8,
-                duration: 0.5,
-                onComplete: () => notification.remove()
-            });
-        }, 5000);
-    }
-}
-
-/* ------------------------------------------------
-   Assignment 4: Fun Zone (OMDb & RAWG APIs)
-   ------------------------------------------------ */
-function initFunZone() {
-    // API Keys - Replace with your own keys
-    const OMDB_API_KEY = '4a3b711b'; // Free key for demo - get yours at omdbapi.com
-    const RAWG_API_KEY = '37d1b2b371404566a830293fd5a4d889'; // Your RAWG API key
-
-    // My favorite movies/shows to display
-    const favoriteMovies = [
-        'Game of Thrones',
-        'The Sopranos',
-        'Interstellar',
-        'The Invisible Guest'
-    ];
-
-    // My favorite games to search
-    const favoriteGames = [
-        'The Witcher 3',
-        'Red Dead Redemption 2',
-        'God of War',
-        'Elden Ring',
-        'Cyberpunk 2077',
-        'Ghost of Tsushima'
-    ];
-
-    // Initialize both APIs
-    fetchMovies();
-    fetchGames();
-
-    // Fetch movies from OMDb API
-    async function fetchMovies() {
-        const moviesGrid = document.getElementById('moviesGrid');
-        const moviesLoading = document.getElementById('moviesLoading');
-
-        if (!moviesGrid) return;
-
-        try {
-            const moviePromises = favoriteMovies.map(title =>
-                fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`)
-                    .then(res => res.json())
-            );
-
-            const movies = await Promise.all(moviePromises);
-            const validMovies = movies.filter(movie => movie.Response === 'True');
-
-            // Remove loading
-            if (moviesLoading) moviesLoading.remove();
-
-            if (validMovies.length === 0) {
-                moviesGrid.innerHTML = `
-                    <div class="funzone__error">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 8v4M12 16h.01"/>
-                        </svg>
-                        <p>Unable to load movies. Please try again later.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Render movie cards
-            validMovies.forEach(movie => {
-                const card = document.createElement('a');
-                card.className = 'movie-card';
-                card.href = `https://www.imdb.com/title/${movie.imdbID}`;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.innerHTML = `
-                    <img
-                        src="${movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'}"
-                        alt="${movie.Title}"
-                        class="movie-card__poster"
-                        loading="lazy"
-                    >
-                    <div class="movie-card__info">
-                        <h4 class="movie-card__title">${movie.Title}</h4>
-                        <div class="movie-card__meta">
-                            <span>${movie.Year}</span>
-                            <span class="movie-card__rating">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="imdb-logo">
-                                ${movie.imdbRating}
-                            </span>
-                        </div>
-                        <p class="movie-card__genre">${movie.Genre}</p>
-                    </div>
-                `;
-
-                // Add hover animation
-                card.addEventListener('mouseenter', () => {
-                    gsap.to(card, { scale: 1.02, duration: 0.3 });
-                });
-                card.addEventListener('mouseleave', () => {
-                    gsap.to(card, { scale: 1, duration: 0.3 });
-                });
-
-                moviesGrid.appendChild(card);
-            });
-
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-            if (moviesLoading) moviesLoading.remove();
-            moviesGrid.innerHTML = `
-                <div class="funzone__error">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 8v4M12 16h.01"/>
-                    </svg>
-                    <p>Unable to load movies. Please try again later.</p>
-                </div>
-            `;
         }
-    }
-
-    // Fetch games from RAWG API (User's Wishlist)
-    async function fetchGames() {
-        const gamesGrid = document.getElementById('gamesGrid');
-        const gamesLoading = document.getElementById('gamesLoading');
-
-        if (!gamesGrid) return;
-
-        try {
-            // Fetch ABaleid's game library from RAWG
-            const response = await fetch(
-                `https://api.rawg.io/api/users/ABaleid/games?key=${RAWG_API_KEY}&statuses=owned,playing,beaten&page_size=6&ordering=-added`
-            );
-
-            if (!response.ok) throw new Error('Failed to fetch games');
-
-            const data = await response.json();
-
-            // Remove loading
-            if (gamesLoading) gamesLoading.remove();
-
-            if (!data.results || data.results.length === 0) {
-                gamesGrid.innerHTML = `
-                    <div class="funzone__error">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 8v4M12 16h.01"/>
-                        </svg>
-                        <p>Unable to load games. Please try again later.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Render game cards
-            data.results.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-
-                // Get platform names (limit to 3)
-                const platforms = game.platforms
-                    ? game.platforms.slice(0, 3).map(p => p.platform.name)
-                    : [];
-
-                // Get genres
-                const genres = game.genres
-                    ? game.genres.map(g => g.name).join(', ')
-                    : 'N/A';
-
-                card.innerHTML = `
-                    <img
-                        src="${game.background_image || 'https://via.placeholder.com/400x225?text=No+Image'}"
-                        alt="${game.name}"
-                        class="game-card__image"
-                        loading="lazy"
-                    >
-                    <div class="game-card__info">
-                        <h4 class="game-card__title">${game.name}</h4>
-                        <div class="game-card__meta">
-                            <span class="game-card__rating">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
-                                ${game.rating.toFixed(1)}
-                            </span>
-                            <span>${game.released ? game.released.split('-')[0] : 'N/A'}</span>
-                        </div>
-                        <div class="game-card__platforms">
-                            ${platforms.map(p => `<span class="game-card__platform">${p}</span>`).join('')}
-                        </div>
-                        <p class="game-card__genres">${genres}</p>
-                    </div>
-                `;
-
-                // Add hover animation
-                card.addEventListener('mouseenter', () => {
-                    gsap.to(card, { scale: 1.02, duration: 0.3 });
-                });
-                card.addEventListener('mouseleave', () => {
-                    gsap.to(card, { scale: 1, duration: 0.3 });
-                });
-
-                gamesGrid.appendChild(card);
-            });
-
-        } catch (error) {
-            console.error('Error fetching games:', error);
-            if (gamesLoading) gamesLoading.remove();
-            gamesGrid.innerHTML = `
-                <div class="funzone__error">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 8v4M12 16h.01"/>
-                    </svg>
-                    <p>Unable to load games. Please try again later.</p>
-                </div>
-            `;
+        function safeUrl(u) {
+            return /^https:\/\/github\.com\//.test(u) ? u : 'https://github.com/' + USER;
         }
+        function relTime(iso) {
+            if (!iso) return '';
+            var diff = (Date.now() - new Date(iso).getTime()) / 1000;
+            if (!isFinite(diff) || diff < 0) return '';
+            var units = [['year', 31536000], ['month', 2592000], ['week', 604800], ['day', 86400], ['hour', 3600], ['minute', 60]];
+            for (var i = 0; i < units.length; i++) {
+                var n = Math.floor(diff / units[i][1]);
+                if (n >= 1) return 'Updated ' + n + ' ' + units[i][0] + (n > 1 ? 's' : '') + ' ago';
+            }
+            return 'Updated just now';
+        }
+
+        function card(repo) {
+            var lang = repo.language
+                ? '<span><i class="repo__lang-dot" style="background:' + (LANG_COLORS[repo.language] || '#8b949e') + '"></i>' + esc(repo.language) + '</span>'
+                : '';
+            var stars = typeof repo.stargazers_count === 'number' && repo.stargazers_count > 0
+                ? '<span><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>' + repo.stargazers_count + '<span class="visually-hidden"> stars</span></span>'
+                : '';
+            var forks = typeof repo.forks_count === 'number' && repo.forks_count > 0
+                ? '<span><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg>' + repo.forks_count + '<span class="visually-hidden"> forks</span></span>'
+                : '';
+            var updated = repo.pushed_at ? '<span>' + esc(relTime(repo.pushed_at)) + '</span>' : '';
+            var desc = repo.description
+                ? '<p class="repo__desc">' + esc(repo.description) + '</p>'
+                : '<p class="repo__desc repo__desc--empty">No description yet.</p>';
+            var title = repo.label
+                ? esc(repo.label) + '<span class="visually-hidden"> (' + esc(repo.name) + ')</span>'
+                : esc(repo.name);
+
+            return '<article class="repo">' +
+                '<h3 class="repo__name"><a class="stretched" href="' + esc(safeUrl(repo.html_url)) + '" target="_blank" rel="noopener">' + title + '</a>' +
+                '<svg class="icon" aria-hidden="true"><use href="#i-arrow-ur"/></svg></h3>' +
+                desc +
+                '<div class="repo__meta">' + lang + stars + forks + updated + '</div>' +
+                '</article>';
+        }
+
+        function ctaCard() {
+            return '<article class="repo repo--cta">' +
+                '<h3 class="repo__name"><a class="stretched" href="https://github.com/' + USER + '?tab=repositories" target="_blank" rel="noopener">All repositories</a>' +
+                '<svg class="icon" aria-hidden="true"><use href="#i-arrow-ur"/></svg></h3>' +
+                '<p class="repo__desc">Coursework, experiments and workshop material on GitHub.</p>' +
+                '</article>';
+        }
+
+        function render(repos) {
+            grid.innerHTML = repos.map(card).join('') + ctaCard();
+            grid.setAttribute('aria-busy', 'false');
+            realignHash();
+        }
+
+        function merge(live) {
+            var byName = {};
+            (live || []).forEach(function (r) { if (r && r.name) byName[r.name.toLowerCase()] = r; });
+            return FEATURED.map(function (f) {
+                var r = byName[f.name.toLowerCase()];
+                if (!r || r.private) return f;
+                return {
+                    name: r.name,
+                    label: f.label,
+                    html_url: r.html_url || f.html_url,
+                    description: r.description || f.description,
+                    language: f.language || r.language,
+                    stargazers_count: r.stargazers_count,
+                    forks_count: r.forks_count,
+                    pushed_at: r.pushed_at
+                };
+            });
+        }
+
+        var cached = null;
+        try { cached = JSON.parse(safeGet('sessionStorage', CACHE_KEY) || 'null'); } catch (e) { cached = null; }
+        if (cached && cached.t && Date.now() - cached.t < CACHE_MS && Array.isArray(cached.repos) && cached.repos.length) {
+            render(cached.repos);
+            return;
+        }
+
+        var controller = 'AbortController' in window ? new AbortController() : null;
+        var timer = window.setTimeout(function () { if (controller) controller.abort(); }, 8000);
+
+        fetch('https://api.github.com/users/' + USER + '/repos?per_page=100&sort=pushed', {
+            headers: { 'Accept': 'application/vnd.github+json' },
+            signal: controller ? controller.signal : undefined
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('GitHub responded ' + res.status);
+                return res.json();
+            })
+            .then(function (data) {
+                if (!Array.isArray(data)) throw new Error('Unexpected response');
+                var repos = merge(data);
+                safeSet('sessionStorage', CACHE_KEY, JSON.stringify({ t: Date.now(), repos: repos }));
+                render(repos);
+            })
+            .catch(function () {
+                // Rate-limited or offline: the curated list still renders, just without live stats
+                render(FEATURED);
+            })
+            .then(function () { window.clearTimeout(timer); });
     }
-}
+
+    /* ------------------------------------------------------------------
+       Certificate viewer
+       ------------------------------------------------------------------ */
+    function initViewer() {
+        var dialog = document.getElementById('certViewer');
+        var img = document.getElementById('viewerImg');
+        var title = document.getElementById('viewerTitle');
+        var close = document.getElementById('viewerClose');
+        var certs = document.querySelectorAll('.cert[data-full]');
+        if (!dialog || !img || !certs.length) return;
+
+        // Browsers without <dialog>: open the image directly instead
+        var supported = typeof dialog.showModal === 'function';
+        var opener = null;
+
+        Array.prototype.forEach.call(certs, function (btn) {
+            btn.addEventListener('click', function () {
+                var src = btn.getAttribute('data-full');
+                var label = (btn.querySelector('.cert__title') || {}).textContent || 'Certificate';
+                if (!supported) { window.open(src, '_blank', 'noopener'); return; }
+                opener = btn;
+                img.src = src;
+                img.alt = label;
+                title.textContent = label;
+                dialog.showModal();
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function shut() { if (dialog.open) dialog.close(); }
+        if (close) close.addEventListener('click', shut);
+
+        // Close on a genuine backdrop click only (not a drag that started inside the dialog)
+        var downOnBackdrop = false;
+        dialog.addEventListener('pointerdown', function (e) { downOnBackdrop = e.target === dialog; });
+        dialog.addEventListener('click', function (e) {
+            if (e.target === dialog && downOnBackdrop) shut();
+            downOnBackdrop = false;
+        });
+        dialog.addEventListener('close', function () {
+            document.body.style.overflow = '';
+            img.removeAttribute('src');
+            if (opener) opener.focus();
+        });
+    }
+
+    /* ------------------------------------------------------------------
+       Copy email
+       ------------------------------------------------------------------ */
+    function initCopyEmail() {
+        var btn = document.getElementById('copyEmail');
+        if (!btn) return;
+        var label = btn.querySelector('.copy-label');
+        var use = btn.querySelector('.copy-icon use');
+        var status = document.getElementById('copyStatus');
+        var email = btn.getAttribute('data-email');
+        var resetTimer = null;
+
+        function fallbackCopy(text) {
+            var prev = document.activeElement;
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.top = '0';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            ta.setSelectionRange(0, text.length);
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+            document.body.removeChild(ta);
+            if (prev && prev.focus) prev.focus();
+            return ok ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+        }
+
+        btn.addEventListener('click', function () {
+            var p = navigator.clipboard && window.isSecureContext
+                ? navigator.clipboard.writeText(email).catch(function () { return fallbackCopy(email); })
+                : fallbackCopy(email);
+            p.then(function () {
+                btn.classList.add('is-copied');
+                if (label) label.textContent = 'Copied!';
+                if (use) use.setAttribute('href', '#i-check');
+                if (status) status.textContent = 'Email address copied';
+            }).catch(function () {
+                if (label) label.textContent = email;
+                if (status) status.textContent = 'Copy failed. The address is ' + email;
+            }).then(function () {
+                window.clearTimeout(resetTimer);
+                resetTimer = window.setTimeout(function () {
+                    btn.classList.remove('is-copied');
+                    if (label) label.textContent = 'Copy email';
+                    if (use) use.setAttribute('href', '#i-copy');
+                    if (status) status.textContent = '';
+                }, 2200);
+            });
+        });
+    }
+
+    function initYear() {
+        var el = document.getElementById('year');
+        if (el) el.textContent = String(new Date().getFullYear());
+    }
+
+    function boot() {
+        // Reveal first, and isolate every module so one failure can't blank the page
+        [initReveal, initTheme, initHeader, initHashFix, initMotionToggle, initFilters, initRepos, initViewer, initCopyEmail, initYear]
+            .forEach(function (fn) {
+                try { fn(); } catch (e) { if (window.console) console.error(e); }
+            });
+        window.__siteReady = true;
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+})();

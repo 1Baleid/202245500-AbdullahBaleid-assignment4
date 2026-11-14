@@ -4,6 +4,7 @@
 
 # Screenshots (temporary testing images in root only)
 /*.png
+!/apple-touch-icon.png
 
 # OS files
 .DS_Store
