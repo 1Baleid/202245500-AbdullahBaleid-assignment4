@@ -166,6 +166,9 @@
         try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
         var target = id && document.getElementById(id);
         if (!target) return;
+        // On reload / back-forward, let the browser restore the reader's own position
+        var navEntry = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+        if (navEntry && navEntry.type !== 'navigate') return;
         var userMoved = false;
         ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
             window.addEventListener(t, function () { userMoved = true; }, { once: true, passive: true });
@@ -227,15 +230,14 @@
     function initMotionToggle() {
         var btn = document.getElementById('motionToggle');
         if (!btn) return;
+        // The label stays "Pause animations"; aria-pressed carries the state (APG toggle-button pattern)
         if (safeGet('localStorage', 'motion') === 'paused') {
             root.classList.add('motion-paused');
             btn.setAttribute('aria-pressed', 'true');
-            btn.setAttribute('aria-label', 'Play animations');
         }
         btn.addEventListener('click', function () {
             var paused = root.classList.toggle('motion-paused');
             btn.setAttribute('aria-pressed', String(paused));
-            btn.setAttribute('aria-label', paused ? 'Play animations' : 'Pause animations');
             safeSet('localStorage', 'motion', paused ? 'paused' : 'playing');
         });
     }
@@ -280,7 +282,7 @@
         grid.setAttribute('aria-busy', 'true');
 
         var USER = '1Baleid';
-        var CACHE_KEY = 'gh-repos-v3';
+        var CACHE_KEY = 'gh-repos-v4';
         var CACHE_MS = 30 * 60 * 1000;
 
         // Curated selection, in display order. Live GitHub data (stars, last push,
@@ -290,7 +292,7 @@
             { name: 'ReqFlow-Frontend', language: 'JavaScript',
               description: 'React front end for ReqFlow: create, refine, review, approve and track software requirements with role-based workflows.' },
             { name: 'calibrated-location-tensors', language: 'Python',
-              description: 'Research code for multi-camera pedestrian trajectory forecasting on the WNMF dataset: diagnoses and repairs a published LSTM encoder–decoder that forecasts camera ID and bounding box over 12 future steps.' },
+              description: 'CaLT research code (University of Glasgow): multi-camera pedestrian forecasting on WNMF. Corrects model and evaluation defects in a published LSTM encoder–decoder; average position error 124.1 → 61.5 px.' },
             { name: 'ClutchTimes-SCAI', language: 'Jupyter Notebook',
               description: 'My AI League finalist project: YOLOv8 ball tracking, camera control from object coordinates, and face recognition for automated soccer broadcasts.' },
             { name: 'tuwaiq-agent-workshop', language: 'Python',
@@ -525,7 +527,15 @@
         // Reveal first, and isolate every module so one failure can't blank the page
         [initReveal, initTheme, initHeader, initHashFix, initMotionToggle, initFilters, initRepos, initViewer, initCopyEmail, initYear]
             .forEach(function (fn) {
-                try { fn(); } catch (e) { if (window.console) console.error(e); }
+                try { fn(); } catch (e) {
+                    // If reveal itself fails, un-hide everything it would have animated
+                    if (fn === initReveal) {
+                        Array.prototype.forEach.call(document.querySelectorAll('[data-reveal]'), function (el) {
+                            el.removeAttribute('data-reveal');
+                        });
+                    }
+                    if (window.console) console.error(e);
+                }
             });
         window.__siteReady = true;
     }

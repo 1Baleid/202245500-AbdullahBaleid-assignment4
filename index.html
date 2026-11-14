@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abdullah Baleid — Software Engineering &amp; Applied AI</title>
-    <meta name="description" content="Software Engineering student at KFUPM building RAG systems, researching VLM hallucinations, and a Tabby Imagine 2026 finalist (8th of 275).">
+    <meta name="description" content="Software Engineering student at KFUPM building AI assistants, researching VLM hallucinations, and a Tabby Imagine 2026 finalist (8th of 275).">
     <meta name="author" content="Abdullah Baleid">
     <meta name="theme-color" content="#f5f3ef" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0c0c0d" media="(prefers-color-scheme: dark)">
@@ -17,14 +17,14 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:url" content="https://abdullah-baleid-portfolio.vercel.app/">
     <meta property="og:title" content="Abdullah Baleid — Software Engineering &amp; Applied AI">
-    <meta property="og:description" content="RAG systems at Arkan, VLM hallucination research at SDAIA–KFUPM JRCAI, and three Tabby Imagine 2026 prototypes, including a top-10 finalist (Tabby Jameiyah, 8th of 275).">
+    <meta property="og:description" content="A database-connected AI assistant at Arkan, VLM hallucination research at SDAIA–KFUPM JRCAI, and three Tabby Imagine 2026 prototypes, including a top-10 finalist (Tabby Jameiyah, 8th of 275).">
     <meta property="og:image" content="https://abdullah-baleid-portfolio.vercel.app/assets/og.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Abdullah Baleid: name, tagline and portrait">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Abdullah Baleid — Software Engineering &amp; Applied AI">
-    <meta name="twitter:description" content="RAG systems, VLM hallucination research, and a Tabby Imagine 2026 finalist (8th of 275).">
+    <meta name="twitter:description" content="AI assistants, VLM hallucination research, and a Tabby Imagine 2026 finalist (8th of 275).">
     <meta name="twitter:image" content="https://abdullah-baleid-portfolio.vercel.app/assets/og.jpg">
     <meta name="twitter:image:alt" content="Abdullah Baleid: name, tagline and portrait">
 
@@ -40,6 +40,7 @@
             try {
                 var t = localStorage.getItem('theme');
                 if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t);
+                if (localStorage.getItem('motion') === 'paused') root.classList.add('motion-paused');
             } catch (e) {}
             window.setTimeout(function () {
                 if (!window.__siteReady) root.classList.remove('js');
@@ -51,7 +52,7 @@
     <link rel="preload" href="assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=20261115">
 
     <script type="application/ld+json">
     {
@@ -62,7 +63,7 @@
         "url": "https://abdullah-baleid-portfolio.vercel.app/",
         "image": "https://abdullah-baleid-portfolio.vercel.app/assets/images/me-personal.jpg",
         "jobTitle": "Software Engineering Student",
-        "description": "Software Engineering student at KFUPM building RAG systems and researching hallucinations in vision-language models.",
+        "description": "Software Engineering student at KFUPM building AI assistants and researching hallucinations in vision-language models.",
         "email": "mailto:a.baleid@outlook.com",
         "affiliation": [
             { "@type": "CollegeOrUniversity", "name": "King Fahd University of Petroleum & Minerals" },
@@ -155,7 +156,7 @@
                     </h1>
 
                     <p class="hero__lede">
-                        I build AI systems that hold up outside the notebook: RAG for a real construction-management
+                        I build AI systems that hold up outside the notebook: an AI assistant for a real construction-management
                         platform, product prototypes people can actually click through, and research into
                         <em>why</em> vision-language models see things that aren’t there.
                     </p>
@@ -191,7 +192,7 @@
                 <div class="hero__portrait">
                     <figure class="portrait">
                         <img src="assets/images/me-personal-880.webp"
-                             srcset="assets/images/me-personal-480.webp 480w, assets/images/me-personal-880.webp 880w, assets/images/me-personal-1057.webp 1057w"
+                             srcset="assets/images/me-personal-480.webp 480w, assets/images/me-personal-680.webp 680w, assets/images/me-personal-880.webp 880w, assets/images/me-personal-1057.webp 1057w"
                              sizes="(max-width: 960px) min(400px, calc(100vw - 32px)), 440px"
                              alt="Portrait of Abdullah Baleid" width="1057" height="1155" fetchpriority="high">
                         <figcaption class="portrait__caption">
@@ -255,30 +256,30 @@
                             engineering meets applied AI.
                         </p>
                         <p>
-                            As the part-time <strong>Technical Lead at Arkan</strong>, I built a database-backed RAG system and
-                            expanded test coverage for a construction-management SaaS platform. At the
+                            As the part-time <strong>Technical Lead at Arkan</strong>, I built a database-connected AI assistant
+                            and hundreds of tests for a construction-management SaaS platform. At the
                             <strong>SDAIA–KFUPM Joint Research Center for AI (JRCAI)</strong>, I study why small vision-language
                             models hallucinate medical devices in chest X-rays.
                         </p>
                         <p>
                             I studied AI on exchange at <strong>NTU Singapore</strong>, spent summer 2026 doing computer-vision
-                            research at the <strong>University of Glasgow</strong>, and placed <strong>8th of 275</strong> at
-                            Tabby Imagine 2026. Outside of work I’ve tutored 150+ hours of computer science and math, and
+                            research at the <strong>University of Glasgow</strong>, and built three product prototypes for
+                            <strong>Tabby Imagine 2026</strong>. Outside of work I’ve tutored 150+ hours of computer science and math, and
                             co-founded KFUPM’s AIFA AI Club.
                         </p>
 
                         <dl class="toolkit">
                             <div class="toolkit__row">
                                 <dt>AI &amp; ML</dt>
-                                <dd><span class="tag">LLMs &amp; VLMs</span><span class="tag">RAG</span><span class="tag">LangChain</span><span class="tag">PyTorch</span><span class="tag">YOLOv8</span><span class="tag">Computer vision</span></dd>
+                                <dd><span class="tag">LLMs &amp; VLMs</span><span class="tag">OpenAI API</span><span class="tag">RAG</span><span class="tag">LangChain</span><span class="tag">PyTorch</span><span class="tag">YOLOv8</span><span class="tag">Computer vision</span></dd>
                             </div>
                             <div class="toolkit__row">
                                 <dt>Engineering</dt>
-                                <dd><span class="tag">Python</span><span class="tag">JavaScript</span><span class="tag">React</span><span class="tag">Playwright</span><span class="tag">Docker</span><span class="tag">Git</span></dd>
+                                <dd><span class="tag">Python</span><span class="tag">TypeScript / JavaScript</span><span class="tag">NestJS</span><span class="tag">PostgreSQL</span><span class="tag">React</span><span class="tag">Playwright</span><span class="tag">Docker</span><span class="tag">Git</span></dd>
                             </div>
                             <div class="toolkit__row">
                                 <dt>Automation</dt>
-                                <dd><span class="tag">n8n</span><span class="tag">LLM workflows</span><span class="tag">SAP Generative AI</span></dd>
+                                <dd><span class="tag">n8n</span><span class="tag">AI workflows</span><span class="tag">Power BI</span><span class="tag">SAP Generative AI</span></dd>
                             </div>
                             <div class="toolkit__row">
                                 <dt>Languages</dt>
@@ -302,8 +303,8 @@
                         <span class="stat__label">Hours tutoring computer science &amp; math</span>
                     </li>
                     <li class="stat">
-                        <span class="stat__value">7</span>
-                        <span class="stat__label">Open VLMs benchmarked on 120 chest X-ray pairs</span>
+                        <span class="stat__value">36%</span>
+                        <span class="stat__label">Lower cost per question for Arkan’s AI assistant</span>
                     </li>
                 </ul>
             </div>
@@ -447,7 +448,7 @@
                         <p>
                             I built a benchmark of same-patient chest X-ray pairs to measure medical-device hallucinations,
                             evaluated seven open VLMs across four device categories, and tested abstention and expert-logit
-                            fusion as mitigations. The research report is being prepared for jury submission.
+                            fusion as mitigations. The research report is being prepared for submission to JURI.
                         </p>
                         <ul class="tags" aria-label="Topics">
                             <li class="tag">Vision-language models</li><li class="tag">Hallucination</li><li class="tag">Medical imaging</li><li class="tag">Evaluation</li>
@@ -463,22 +464,22 @@
                 <div class="projects" id="projectGrid">
                     <article class="project card" data-tags="ai web" data-reveal>
                         <p class="project__kicker">Industry · Arkan</p>
-                        <h3 class="project__title">Database-backed RAG for a construction SaaS</h3>
+                        <h3 class="project__title">Database-connected AI assistant</h3>
                         <p class="project__desc">
-                            A retrieval-augmented generation system for a construction-management platform. It pulls in
-                            tool-specific skill files and only the task-relevant database context, which keeps prompts lean
-                            and limits unnecessary data exposure.
+                            An assistant that answers questions from a construction-management platform’s own database.
+                            Selective database context cut cost per question by 36% in testing; read-only permissions and
+                            project-level restrictions keep data access safe, backed by 71 unit tests.
                         </p>
-                        <ul class="tags"><li class="tag">RAG</li><li class="tag">LLMs</li><li class="tag">SaaS</li></ul>
+                        <ul class="tags"><li class="tag">NestJS</li><li class="tag">PostgreSQL</li><li class="tag">OpenAI</li></ul>
                     </article>
 
                     <article class="project card" data-tags="research ai" data-reveal>
                         <p class="project__kicker">Research · University of Glasgow</p>
-                        <h3 class="project__title">Calibrated Location Tensors</h3>
+                        <h3 class="project__title">CaLT: Calibrated Location Tensors</h3>
                         <p class="project__desc">
-                            Diagnosing and repairing a published, parameter-efficient LSTM encoder–decoder (SMO-MCTF) that forecasts
-                            which camera a pedestrian appears in, and where, over the next 12 steps. The repaired model lifts
-                            camera-gated box IoU from 0.13 to 0.63 and cuts centroid error from 124 to 62&nbsp;px
+                            Predicting which camera a pedestrian appears in next, and where, by correcting defects in a published
+                            model (SMO-MCTF) and in its evaluation. On WNMF under matched evaluation, average position error
+                            fell from 124.1 to 61.5&nbsp;px and camera-gated box IoU rose from 0.13 to 0.63
                             (day-disjoint 5-fold CV, 190,663 windows).
                         </p>
                         <ul class="tags"><li class="tag">Computer vision</li><li class="tag">LSTMs</li><li class="tag">Forecasting</li></ul>
@@ -489,7 +490,7 @@
                         <p class="project__kicker">Industry · Renad Al Majd Group</p>
                         <h3 class="project__title">GenAI guidelines assistant</h3>
                         <p class="project__desc">
-                            A RAG solution built with LLMs and LangChain that answers questions from PDFs and official websites
+                            An AI assistant built with LangChain that answers questions from PDFs and official websites
                             covering SDAIA’s Generative AI Guidelines for Government, alongside n8n automations for reports,
                             spreadsheets and notifications.
                         </p>
@@ -552,9 +553,10 @@
                                 </div>
                                 <p class="xp__org">Arkan · Remote</p>
                                 <ul class="xp__points">
-                                    <li>Developed a database-backed retrieval-augmented generation (RAG) system with tool-specific skill files and task-relevant database context, designed to reduce token usage and limit unnecessary data exposure.</li>
-                                    <li>Expanded quality assurance with Playwright end-to-end tests, Docker-containerized integration testing, and unit tests for platform services and tools.</li>
-                                    <li>Worked directly with clients to refine dashboard requirements and guide improvements to a construction-management SaaS platform; reviewed pull requests to maintain code quality.</li>
+                                    <li>Built a database-connected AI assistant using NestJS, PostgreSQL, and OpenAI; reduced cost per question by 36% in testing through selective database context.</li>
+                                    <li>Protected database access with read-only permissions and project-level restrictions; added 71 unit tests. The assistant is awaiting deployment.</li>
+                                    <li>Added 252 finance unit tests, integration tests, and Playwright permission tests; restored 48 failing tests and cut test-database cleanup from 101 s to 6 s.</li>
+                                    <li>Turned client feedback into dashboard improvements and delivered Power BI reporting covering approximately 319K inspection units to production.</li>
                                 </ul>
                             </div>
                         </li>
@@ -567,8 +569,8 @@
                                 </div>
                                 <p class="xp__org">Renad Al Majd Group · Riyadh</p>
                                 <ul class="xp__points">
-                                    <li>Built a RAG solution using LLMs and LangChain to retrieve information from PDFs and official websites covering SDAIA’s Generative AI Guidelines for Government.</li>
-                                    <li>Automated reports, spreadsheets, and notifications using n8n and integrated LLMs into task-specific workflows.</li>
+                                    <li>Built an AI assistant using LangChain to answer questions from PDFs and official websites about SDAIA’s Generative AI Guidelines for Government.</li>
+                                    <li>Automated reports, spreadsheets, and notifications using n8n and AI workflows.</li>
                                 </ul>
                             </div>
                         </li>
@@ -581,7 +583,7 @@
                                 </div>
                                 <p class="xp__org">Code Link · Riyadh</p>
                                 <ul class="xp__points">
-                                    <li>Gathered requirements, conducted market research, and supported project scoping and coordination for early-stage startups, including Scoopy and Raeik.</li>
+                                    <li>Gathered requirements and conducted market research to define project scope for startups Scoopy and Raeik.</li>
                                 </ul>
                             </div>
                         </li>
@@ -601,7 +603,7 @@
                                 <p class="xp__org">SDAIA–KFUPM Joint Research Center for AI (JRCAI)</p>
                                 <ul class="xp__points">
                                     <li>Built a benchmark of 120 same-patient chest X-ray pairs to evaluate medical-device hallucinations in small vision-language models; evaluated seven open models across four device categories.</li>
-                                    <li>Tested abstention and expert-logit fusion. Preparing the research report, <em>Pixels or Prior?</em>, for jury submission.</li>
+                                    <li>Tested abstention and expert-logit fusion to reduce incorrect answers. Preparing the research report, <em>Pixels or Prior?</em>, for submission to JURI.</li>
                                 </ul>
                             </div>
                         </li>
@@ -614,7 +616,7 @@
                                 </div>
                                 <p class="xp__org">University of Glasgow</p>
                                 <ul class="xp__points">
-                                    <li>Conducted computer vision research on deep learning methods for multi-camera pedestrian trajectory forecasting.</li>
+                                    <li>Developed CaLT to predict pedestrian movement across cameras, correcting model and evaluation defects; reduced average position error from 124.1 to 61.5 pixels on WNMF under matched evaluation.</li>
                                 </ul>
                             </div>
                         </li>
@@ -706,7 +708,7 @@
                         <time class="honor__date" datetime="2026-10">Oct 2026</time>
                         <div class="honor__body">
                             <h3 class="honor__title"><a href="#tabby">Tabby Imagine 2026: 8th place finalist</a></h3>
-                            <p>Ranked 8th of 275 submissions with Tabby Jameiyah, a savings-circle product concept; one of 10 finalist entries.</p>
+                            <p>With Tabby Jameiyah, a savings-circle product concept; one of 10 finalist entries.</p>
                         </div>
                     </li>
                     <li class="honor" data-reveal>
@@ -882,6 +884,6 @@
         <img class="viewer__img" id="viewerImg" alt="">
     </dialog>
 
-    <script src="js/script.js" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="js/script.js?v=20261115" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

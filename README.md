@@ -1,6 +1,6 @@
 # Abdullah Baleid — Portfolio
 
-Personal website of Abdullah Baleid, a Software Engineering student at KFUPM working on applied AI: production RAG systems, research on hallucinations in vision-language models, and product prototypes.
+Personal website of Abdullah Baleid, a Software Engineering student at KFUPM working on applied AI: a database-connected AI assistant for a construction-management SaaS platform, research on hallucinations in vision-language models, and product prototypes.
 
 **Live:** [abdullah-baleid-portfolio.vercel.app](https://abdullah-baleid-portfolio.vercel.app/)
 
